@@ -2,13 +2,13 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Qurłacoin Clicker</title>
   <style>
     body {
-      font-family: 'Arial', sans-serif;
-      background-color: #0d1117;
-      color: #c9d1d9;
+      font-family: 'Courier New', monospace;
+      background: #1a1a1a;
+      color: #eee;
       margin: 0;
       padding: 0;
       display: flex;
@@ -17,49 +17,98 @@
     }
     h1 {
       margin-top: 20px;
-    }
-    #coin {
-      width: 150px;
-      cursor: pointer;
-      transition: transform 0.1s ease-in-out;
-    }
-    #coin:active {
-      transform: scale(0.95);
+      font-size: 2em;
+      letter-spacing: 2px;
     }
     #hp-bar-container {
       width: 80%;
       height: 20px;
-      background: #555;
+      background: #444;
       border-radius: 10px;
-      margin: 20px;
+      margin: 15px;
+      overflow: hidden;
     }
     #hp-bar {
       height: 100%;
       background: limegreen;
       width: 100%;
-      border-radius: 10px;
+      transition: width 0.3s;
+    }
+    #coin {
+      width: 120px;
+      cursor: pointer;
+      transition: transform 0.1s ease-in-out;
+      border-radius: 50%;
+      border: 3px solid #555;
+    }
+    #coin:active {
+      transform: scale(0.9);
     }
     #stats {
-      margin: 10px 0;
+      margin: 10px;
+      font-size: 1.1em;
+      text-align: center;
+    }
+    #buttons {
+      margin: 15px;
+    }
+    #buttons button {
+      background: #333;
+      border: 1px solid #555;
+      color: #eee;
+      padding: 8px 12px;
+      margin: 3px;
+      cursor: pointer;
+      border-radius: 4px;
+      font-size: 0.9em;
+    }
+    #buttons button:hover {
+      background: #444;
+    }
+    #shop {
+      display: none;
+      margin: 20px;
+      padding: 10px;
+      background: #222;
+      border: 1px solid #555;
+      border-radius: 8px;
+      width: 90%;
+      max-width: 600px;
+      text-align: center;
+    }
+    #shop h2 {
+      margin-top: 0;
+    }
+    #shop button {
+      background: #444;
+      border: 1px solid #666;
+      color: #ddd;
+      padding: 6px 10px;
+      margin: 5px;
+      border-radius: 4px;
+      font-size: 0.85em;
+    }
+    #shop button:hover {
+      background: #555;
     }
     #inventory {
       display: grid;
-      grid-template-columns: repeat(5, 70px);
-      gap: 10px;
-      background: #161b22;
+      grid-template-columns: repeat(auto-fill, 64px);
+      gap: 8px;
+      background: #222;
       padding: 10px;
       border-radius: 10px;
-      margin-top: 20px;
+      margin: 15px;
     }
     .slot {
       width: 64px;
       height: 64px;
-      background-color: #2d333b;
-      border: 2px solid #444c56;
+      background: #333;
+      border: 1px solid #555;
+      position: relative;
       display: flex;
       align-items: center;
       justify-content: center;
-      position: relative;
     }
     .slot img {
       max-width: 60px;
@@ -67,61 +116,53 @@
     }
     .tooltip {
       visibility: hidden;
-      background-color: black;
-      color: white;
+      background: rgba(0,0,0,0.8);
+      color: #fff;
       text-align: center;
-      padding: 5px;
-      border-radius: 6px;
+      padding: 4px;
+      border-radius: 4px;
       position: absolute;
-      z-index: 1;
       bottom: 70px;
       left: 50%;
       transform: translateX(-50%);
-      white-space: nowrap;
+      font-size: 0.75em;
+      z-index: 1;
     }
     .slot:hover .tooltip {
       visibility: visible;
     }
-    #shop, #buttons, #messages {
-      margin: 20px;
-    }
-    button {
-      background-color: #238636;
-      color: white;
-      border: none;
-      padding: 10px 20px;
-      margin: 5px;
-      cursor: pointer;
-      border-radius: 5px;
-    }
-    button:hover {
-      background-color: #2ea043;
+    #messages p {
+      margin: 3px;
+      color: #0f0;
+      font-size: 0.85em;
     }
   </style>
 </head>
 <body>
-  <h1>Qurłacoin Clicker</h1>
+  <h1>QURLACOIN CLICKER</h1>
   <div id="hp-bar-container">
     <div id="hp-bar"></div>
   </div>
-  <img id="coin" src="qurlacoin-clicker-gold-coin.png" onclick="clickCoin()" alt="Qurłacoin">
+  <img id="coin" src="img/qurlacoin-clicker-gold-coin.png" onclick="clickCoin()" alt="Qurłacoin">
   <div id="stats">
     <p>QurłaPoints: <span id="points">0</span></p>
     <p>Energy: <span id="energy">10</span>/<span id="maxEnergy">10</span></p>
     <p>DMG: <span id="dmg">1</span></p>
-    <p>EXP: <span id="exp">0</span> | Level: <span id="level">1</span></p>
+    <p>EXP: <span id="exp">0</span> | LVL: <span id="level">1</span></p>
   </div>
   <div id="buttons">
-    <button onclick="openShop()">Open Shop</button>
+    <button onclick="toggleInventory()">Inventory</button>
+    <button onclick="toggleShop()">Shop</button>
     <button onclick="watchAd()">Watch Ad (+10 QurłaPoints)</button>
   </div>
-  <div id="shop" style="display:none">
-    <button onclick="buyUpgrade('dmg')">Upgrade DMG (Cost: <span id="dmgCost">10</span>)</button>
-    <button onclick="buyUpgrade('energyLimit')">Increase Max Energy (Cost: <span id="energyCost">10</span>)</button>
-    <button onclick="buyUpgrade('regen')">Increase Energy Regen (Cost: <span id="regenCost">10</span>)</button>
+  <div id="shop">
+    <h2>Qurła Shop</h2>
+    <button onclick="buyUpgrade('dmg')">+1 DMG (Cost: <span id="dmgCost">10</span>)</button>
+    <button onclick="buyUpgrade('energyLimit')">+Max Energy (Cost: <span id="energyCost">10</span>)</button>
+    <button onclick="buyUpgrade('regen')">+Energy Regen Rate (Cost: <span id="regenCost">10</span>)</button>
   </div>
-  <div id="messages"></div>
   <div id="inventory"></div>
+  <div id="messages"></div>
 
   <script>
     let points = 0;
@@ -138,16 +179,11 @@
     const inventorySize = 20;
 
     const items = [
-      { name: "Energy Potion", img: "items/energy.png", desc: "+10 energy instantly" },
-      { name: "Attack Potion", img: "items/attack.png", desc: "+2 DMG for 30s" },
-      { name: "Passat B2 NFT Shard", img: "items/b2.png", desc: "Collect 5 to mint B2 NFT" },
-      { name: "Passat B3 NFT Shard", img: "items/b3.png", desc: "Collect 5 to mint B3 NFT" },
-      { name: "Passat B4 NFT Shard", img: "items/b4.png", desc: "Collect 5 to mint B4 NFT" },
-      { name: "Passat B5 NFT Shard", img: "items/b5.png", desc: "Collect 5 to mint B5 NFT" },
-      { name: "Żulikowy Beret", img: "items/beret.png", desc: "Stylowy dodatek" },
-      { name: "Paragon z Biedronki", img: "items/paragon.png", desc: "Dowód honoru" },
-      { name: "JinLing", img: "items/jinling.png", desc: "Typowy zapas z bazaru" },
-      { name: "Skarpetki w sandałach", img: "items/skarpety.png", desc: "Janusz Style" },
+      { name: "Energy Potion", img: "img/energy.png", desc: "+10 energy instantly" },
+      { name: "Attack Potion", img: "img/attack.png", desc: "+2 DMG for 30s" },
+      { name: "Passat B2 NFT Shard", img: "img/b2.png", desc: "Collect 5 to mint B2 NFT" },
+      { name: "JinLing", img: "img/jinling.png", desc: "Bazaar's special cigarettes" },
+      { name: "Skarpetki w sandałach", img: "img/skarpety.png", desc: "Janusz Style" }
     ];
 
     function clickCoin() {
@@ -169,8 +205,7 @@
     }
 
     function updateHP() {
-      const bar = document.getElementById("hp-bar");
-      bar.style.width = `${(hp / maxHp) * 100}%`;
+      document.getElementById("hp-bar").style.width = `${(hp / maxHp) * 100}%`;
     }
 
     function checkLevelUp() {
@@ -183,6 +218,16 @@
       }
     }
 
+    function toggleShop() {
+      const shop = document.getElementById("shop");
+      shop.style.display = shop.style.display === "none" ? "block" : "none";
+    }
+
+    function toggleInventory() {
+      const inv = document.getElementById("inventory");
+      inv.style.display = inv.style.display === "none" ? "grid" : "none";
+    }
+
     function maybeDropItem() {
       if (Math.random() < 0.4 && inventory.length < inventorySize) {
         const item = items[Math.floor(Math.random() * items.length)];
@@ -192,32 +237,24 @@
       }
     }
 
-   function updateInventory() {
-  const inv = document.getElementById("inventory");
-  inv.innerHTML = "";
-  for (let i = 0; i < inventorySize; i++) {
-    const slot = document.createElement("div");
-    slot.className = "slot";
-    if (inventory[i]) {
-      const img = document.createElement("img");
-      img.src = inventory[i].img;
-      img.alt = inventory[i].name;
-
-      const tooltip = document.createElement("div");
-      tooltip.className = "tooltip";
-      tooltip.innerText = `${inventory[i].name} - ${inventory[i].desc}`;
-
-      slot.appendChild(img);
-      slot.appendChild(tooltip);
+    function updateInventory() {
+      const inv = document.getElementById("inventory");
+      inv.innerHTML = "";
+      for (let i = 0; i < inventorySize; i++) {
+        const slot = document.createElement("div");
+        slot.className = "slot";
+        if (inventory[i]) {
+          const img = document.createElement("img");
+          img.src = inventory[i].img;
+          const tooltip = document.createElement("div");
+          tooltip.className = "tooltip";
+          tooltip.innerText = `${inventory[i].name}\n${inventory[i].desc}`;
+          slot.appendChild(img);
+          slot.appendChild(tooltip);
+        }
+        inv.appendChild(slot);
+      }
     }
-    inv.appendChild(slot);
-  }
-}
-
-
-    function openShop() {
-  document.getElementById("shop").style.display = "block";
-}
 
     function buyUpgrade(type) {
       if (type === 'dmg' && points >= dmgCost) {
@@ -266,3 +303,4 @@
   </script>
 </body>
 </html>
+
