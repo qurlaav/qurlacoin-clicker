@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>QurlaCoin Clicker</title>
   <style>
     body {
@@ -15,7 +15,6 @@
       min-height: 100vh;
       color: #222;
     }
-
     .container {
       width: 100%;
       max-width: 400px;
@@ -23,46 +22,39 @@
       box-sizing: border-box;
       text-align: center;
     }
-
     .header {
       font-size: 2em;
       font-weight: bold;
       margin-top: 10px;
       margin-bottom: 20px;
     }
-
     .coin {
       width: 160px;
       height: 160px;
-      background: url('https://upload.wikimedia.org/wikipedia/commons/thumb/e/e3/Gold_coin_icon.png/600px-Gold_coin_icon.png') no-repeat center/contain;
+      background: url('https://upload.wikimedia.org/wikipedia/commons/thumb/4/44/Coin_icon_transparent.png/600px-Coin_icon_transparent.png') no-repeat center/contain;
       margin: 20px auto;
       cursor: pointer;
       transition: transform 0.1s ease;
     }
-
     .coin:active {
       transform: scale(0.9);
     }
-
     .points {
       font-size: 2.4em;
       font-weight: bold;
       margin: 10px 0 20px;
     }
-
     .referral {
       margin: 15px 0;
       font-size: 0.9em;
       word-break: break-all;
     }
-
     .buttons-grid {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
       gap: 10px;
       margin: 20px 0;
     }
-
     .button {
       background: white;
       border: none;
@@ -72,12 +64,15 @@
       cursor: pointer;
       box-shadow: 0 2px 4px rgba(0,0,0,0.2);
       transition: background 0.2s ease;
+      text-decoration: none;
+      color: #222;
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
-
     .button:hover {
       background: #eee;
     }
-
     .footer {
       font-size: 0.85em;
       margin-top: auto;
@@ -87,21 +82,21 @@
 </head>
 <body>
   <div class="container">
-    <div class="header">QurlaCoin</div>
+    <div class="header">QurlaCoin Clicker</div>
     <div class="coin" id="coin"></div>
     <div class="points"><span id="points">0</span></div>
-    <div class="referral">
-      Referral link:<br>
-      <input type="text" id="refLink" value="https://qurlaav.github.io/qurlacoin-clicker" readonly style="width: 100%; margin-top: 5px;">
-      <button class="button" onclick="copyRef()">Copy</button>
-    </div>
     <div class="buttons-grid">
-      <button class="button">Join Telegram</button>
-      <button class="button">Follow on X</button>
-      <button class="button">Daily Bonus</button>
-      <button class="button">Invite Friends</button>
-      <button class="button">Watch Ad</button>
-      <button class="button">Shop</button>
+      <a href="https://t.me/qurlacoin" target="_blank" class="button">Join Telegram</a>
+      <a href="https://x.com/qurlacoin" target="_blank" class="button">Follow on X</a>
+      <a href="#" class="button">Daily Bonus</a>
+      <a href="#" class="button">Invite Friends</a>
+      <a href="#" class="button">Watch Ad</a>
+      <a href="#" class="button">Shop</a>
+    </div>
+    <div class="referral">
+      Your referral link:<br>
+      <input type="text" id="refLink" value="https://yourgame.com/?ref=YOLO" readonly style="width: 100%; margin-top: 5px;">
+      <button class="button" onclick="copyRef()">Copy</button>
     </div>
   </div>
   <div class="footer">QurlaCoin © 2025</div>
@@ -112,7 +107,6 @@
       points++;
       pointsSpan.textContent = points;
     });
-
     function copyRef() {
       const input = document.getElementById("refLink");
       input.select();
@@ -123,4 +117,5 @@
   </script>
 </body>
 </html>
+
 
