@@ -10,14 +10,17 @@
   <div class="container">
     <h1>QURLACOIN CLICKER</h1>
     <div id="story" class="story-panel">
-      <p>Welcome to the Qurla Mines! Click the coin to unearth magical QurlaCoins.</p>
+      <p>Welcome to the Qurla Mines! Defeat QurlaCoins to unearth their magic!</p>
     </div>
+
+    <div id="coin-hp-bar">
+      <div id="coin-hp-fill"></div>
+    </div>
+    <img id="coin" src="img/qurlacoin-clicker-gold-coin.png" alt="Qurłacoin" />
 
     <div id="energy-bar">
       <div id="energy-fill"></div>
     </div>
-
-    <img id="coin" src="img/qurlacoin-clicker-gold-coin.png" alt="Qurłacoin" />
 
     <div class="stats">
       <p id="points">QurłaPoints: 0</p>
@@ -42,6 +45,8 @@
         <button id="buyDmg">+1 DMG (Cost: 100)</button>
         <button id="buyEnergy">+5 Max Energy (Cost: 50)</button>
         <button id="buyRegen">+1 Energy Regen (Cost: 30)</button>
+        <button id="buyAutoHit">Auto-Hit (Cost: 200)</button>
+        <button id="buyDropRate">+1% Drop Rate (Cost: 100)</button>
         <button id="buyCoinSkin">New Coin Skin (Cost: 500)</button>
       </div>
     </div>
@@ -65,6 +70,7 @@
     <audio id="clickSound" src="https://freesound.org/data/previews/171/171671_2435678-lq.mp3"></audio>
     <audio id="levelUpSound" src="https://freesound.org/data/previews/320/320934_4762966-lq.mp3"></audio>
     <audio id="buySound" src="https://freesound.org/data/previews/270/270323_5121236-lq.mp3"></audio>
+    <audio id="coinDefeatSound" src="https://freesound.org/data/previews/269/269592_5121236-lq.mp3"></audio>
   </div>
   <script src="main.js"></script>
 </body>
