@@ -31,7 +31,6 @@
     .coin {
       width: 160px;
       height: 160px;
-      background: url('https://upload.wikimedia.org/wikipedia/commons/thumb/4/44/Coin_icon_transparent.png/600px-Coin_icon_transparent.png') no-repeat center/contain;
       margin: 20px auto;
       cursor: pointer;
       transition: transform 0.1s ease;
@@ -82,9 +81,14 @@
 </head>
 <body>
   <div class="container">
-    <div class="header">QurlaCoin Clicker</div>
-    <div class="coin" id="coin"></div>
+    <div class="header">QurlaCoin</div>
+    <img src="qurlacoin-clicker-gold-coin.png" alt="QurlaCoin" class="coin" id="coin">
     <div class="points"><span id="points">0</span></div>
+    <div class="referral">
+      Referral link:<br>
+      <input type="text" id="refLink" value="https://qurlaav.github.io/qurlacoin-clicker" readonly style="width: 100%; margin-top: 5px;">
+      <button class="button" onclick="copyRef()">Copy</button>
+    </div>
     <div class="buttons-grid">
       <a href="https://t.me/qurlacoin" target="_blank" class="button">Join Telegram</a>
       <a href="https://x.com/qurlacoin" target="_blank" class="button">Follow on X</a>
@@ -92,11 +96,6 @@
       <a href="#" class="button">Invite Friends</a>
       <a href="#" class="button">Watch Ad</a>
       <a href="#" class="button">Shop</a>
-    </div>
-    <div class="referral">
-      Your referral link:<br>
-      <input type="text" id="refLink" value="https://yourgame.com/?ref=YOLO" readonly style="width: 100%; margin-top: 5px;">
-      <button class="button" onclick="copyRef()">Copy</button>
     </div>
   </div>
   <div class="footer">QurlaCoin © 2025</div>
@@ -117,5 +116,4 @@
   </script>
 </body>
 </html>
-
 
