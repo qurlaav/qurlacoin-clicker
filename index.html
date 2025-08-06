@@ -1,224 +1,262 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Qurłacoin Clicker</title>
-  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>QurłaClicker</title>
   <style>
     body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background: linear-gradient(to bottom right, #f5f5dc, #e6e6fa);
       margin: 0;
       padding: 0;
-      font-family: 'Press Start 2P', cursive;
-      background: linear-gradient(135deg, #111, #222);
-      color: #fff;
-      text-align: center;
-      overflow-x: hidden;
     }
-
-    #coin {
-      width: 150px;
-      transition: transform 0.1s;
+    h1 {
+      font-size: 2rem;
+    }
+    .coin {
+      width: 160px;
+      height: 160px;
+      margin: 20px auto;
       cursor: pointer;
+      transition: transform 0.1s ease;
     }
-
-    #coin:active {
-      transform: scale(0.95);
-    }
-
-    .stats, .shop, .inventory, .buttons {
-      margin-top: 20px;
-    }
-
-    .hp-bar {
-      height: 20px;
-      background: red;
+    .status-bar {
       margin: 10px auto;
       width: 80%;
-      border-radius: 10px;
     }
-
-    .hp-inner {
+    .hp-bar, .energy-bar, .exp-bar {
+      height: 20px;
+      background-color: lightgray;
+      border-radius: 10px;
+      overflow: hidden;
+      margin-bottom: 10px;
+    }
+    .hp-fill, .energy-fill, .exp-fill {
       height: 100%;
-      background: lime;
-      width: 100%;
-      border-radius: 10px;
+      background-color: #4caf50;
+      transition: width 0.3s ease;
     }
-
     button {
-      background: #333;
-      color: #fff;
-      border: 2px solid #fff;
-      padding: 10px;
-      margin: 5px;
+      margin: 10px;
+      padding: 10px 20px;
+      font-size: 1rem;
       cursor: pointer;
-      font-family: 'Press Start 2P', cursive;
-      font-size: 10px;
+      border-radius: 8px;
     }
-
-    #inventoryItems {
-      font-size: 10px;
-      max-width: 90%;
-      margin: 0 auto;
+    #inventory {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+      max-width: 400px;
+      margin: 20px auto;
     }
-
-    .hidden { display: none; }
+    .item {
+      width: 64px;
+      height: 64px;
+      background-size: cover;
+      border: 2px solid #333;
+      border-radius: 8px;
+    }
+    #notification {
+      position: fixed;
+      top: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #333;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 8px;
+      display: none;
+      z-index: 9999;
+    }
   </style>
 </head>
 <body>
-  <h1>QURLACOIN CLICKER</h1>
+  <div id="notification"></div>
+  <h1>QurłaClicker</h1>
+  <img id="coin" src="qurlacoin-clicker-gold-coin.png" class="coin" alt="Qurłacoin" />
+  <div class="status-bar">
+    <div>HP: <span id="hp">100</span></div>
+    <div class="hp-bar"><div class="hp-fill" id="hp-bar-fill" style="width:100%"></div></div>
 
-  <div class="stats">
-    <div>QurłaPoints: <span id="points">0</span></div>
     <div>Energy: <span id="energy">10</span>/<span id="energyLimit">10</span></div>
-    <div>EXP: <span id="exp">0</span> | LVL: <span id="level">1</span></div>
+    <div class="energy-bar"><div class="energy-fill" id="energy-bar-fill" style="width:100%"></div></div>
+
+    <div>EXP: <span id="exp">0</span></div>
+    <div class="exp-bar"><div class="exp-fill" id="exp-bar-fill" style="width:0%"></div></div>
   </div>
 
-  <div class="hp-bar"><div class="hp-inner" id="hpBar"></div></div>
-  <div>HP: <span id="hp">100</span>/<span id="maxHp">100</span></div>
-
-  <img src="qurlacoin-clicker-gold-coin.png" id="coin" onclick="clickCoin()">
-
-  <div class="buttons">
-    <button onclick="toggleInventory()">Inventory</button>
-    <button onclick="toggleShop()">Shop</button>
-    <button onclick="watchAd()">Watch Ad (+10 QurłaPoints)</button>
-    <button onclick="window.open('https://t.me/QURLAPOLISHPOWER','_blank')">Join Telegram</button>
-    <button onclick="window.open('https://x.com/qurlaav','_blank')">Follow on X</button>
+  <div>
+    <p>QurłaPoints: <span id="points">0</span></p>
+    <button onclick="openShop()">🛒 Open Shop</button>
+    <button onclick="watchAd()">🎥 Watch Ad (+10 QurłaPoints)</button>
+    <button onclick="openInventory()">🎒 Inventory</button>
   </div>
 
-  <div class="inventory hidden" id="inventory">
-    <h2>Inventory (<span id="inventorySize">0</span>/10)</h2>
-    <div id="inventoryItems"></div>
+  <div id="shop" style="display:none;">
+    <h2>Shop</h2>
+    <button onclick="buyUpgrade('dmg')">+1 DMG (Cost: 10)</button>
+    <button onclick="buyUpgrade('energyLimit')">+1 Energy Limit (Cost: 15)</button>
+    <button onclick="buyUpgrade('energyRegen')">+1 Energy Regen Rate (Cost: 20)</button>
+    <button onclick="buyUpgrade('expBoost')">+10% EXP Boost (Cost: 25)</button>
+    <button onclick="buyUpgrade('inventory')">+1 Inventory Slot (Cost: 30)</button>
+    <button onclick="buyUpgrade('dropRate')">+5% Drop Chance (Cost: 35)</button>
+    <button onclick="closeShop()">Close Shop</button>
   </div>
 
-  <div class="shop hidden" id="shop">
-    <h2>Qurła Shop</h2>
-    <div id="shopItems"></div>
-  </div>
+  <div id="inventory" style="display:none;"></div>
 
   <script>
-    let points = 0;
+    let hp = 100;
+    let maxHp = 100;
     let energy = 10;
     let energyLimit = 10;
-    let regenRate = 1;
-    let damage = 1;
-    let maxHp = 100;
-    let currentHp = 100;
-    let coinSize = 150;
-    let exp = 0;
+    let points = 0;
+    let dmg = 1;
     let level = 1;
+    let exp = 0;
+    let expToNext = 100;
     let inventory = [];
     let inventoryLimit = 10;
+    let energyRegenRate = 1;
+    let dropRate = 0.4;
 
-    const itemList = [
-      'Energy Potion', 'Attack Potion', 'Passat B2 NFT Shard',
-      'Passat B3 NFT Shard', 'Passat B4 NFT Shard', 'Passat B5 NFT Shard',
-      'Skarpetki w sandałach', 'Żulikowy Beret', 'Paragon z Biedronki',
-      'Mentolowe Papierosy', 'Magnetyczny Wieszak na Dywanik', 'Kubek z „Kocham żonę”',
-      'Stary Rachunek z Telekomunikacji', 'Breloczek z Papieżem',
-      'Złoty Łańcuch z Bazaru', 'Zdrapka z Totolotka (przegrana)',
-      'Talon na flaszkę', 'Obrączka po Dziadku', 'Wlepka Tuning Team',
-      'Plastikowy Jezus na Deskę Rozdzielczą'
-    ];
+    const itemImages = {
+      'Energy Potion': 'items/energy.png',
+      'Attack Potion': 'items/attack.png',
+      'Passat B2 NFT Shard': 'items/b2.png',
+      'Passat B3 NFT Shard': 'items/b3.png',
+      'Passat B4 NFT Shard': 'items/b4.png',
+      'Passat B5 NFT Shard': 'items/b5.png',
+      'Żulikowy Beret': 'items/beret.png',
+      'Paragon z Biedronki': 'items/paragon.png',
+      'Mentolowe': 'items/mentol.png',
+      'Skarpetki w sandałach': 'items/skarpety.png'
+    };
 
-    const shopList = [
-      { name: "+1 DMG", cost: 10, effect: () => damage++ },
-      { name: "+1 Max Energy", cost: 10, effect: () => energyLimit++ },
-      { name: "+1 Energy Regen Rate", cost: 15, effect: () => regenRate++ },
-      { name: "+1 Inventory Slot", cost: 20, effect: () => inventoryLimit++ },
-      { name: "+5% Item Drop Chance", cost: 25, effect: () => {} },
-      { name: "+5% EXP Gain", cost: 25, effect: () => {} },
-      { name: "Auto Clicker (1/s)", cost: 50, effect: () => setInterval(clickCoin, 1000) },
-      { name: "+1 Coin Size", cost: 10, effect: () => coinSize += 1 },
-      { name: "+5 QurłaPoints per kill", cost: 100, effect: () => extraKillPoints += 5 },
-      { name: "+1 Energy Regen Every 2s", cost: 75, effect: () => setInterval(() => regenEnergy(1), 2000) }
-    ];
+    const itemPool = Object.keys(itemImages);
 
-    let extraKillPoints = 0;
+    function updateUI() {
+      document.getElementById('hp').innerText = hp;
+      document.getElementById('energy').innerText = energy;
+      document.getElementById('energyLimit').innerText = energyLimit;
+      document.getElementById('points').innerText = points;
+      document.getElementById('exp').innerText = exp;
+      document.getElementById('hp-bar-fill').style.width = (hp / maxHp * 100) + '%';
+      document.getElementById('energy-bar-fill').style.width = (energy / energyLimit * 100) + '%';
+      document.getElementById('exp-bar-fill').style.width = (exp / expToNext * 100) + '%';
+    }
+
+    function showNotification(text) {
+      const note = document.getElementById('notification');
+      note.innerText = text;
+      note.style.display = 'block';
+      setTimeout(() => {
+        note.style.display = 'none';
+      }, 2000);
+    }
 
     function clickCoin() {
-      if (energy < 1) return;
-      currentHp -= damage;
+      if (energy <= 0) {
+        showNotification('No energy!');
+        return;
+      }
       energy--;
-      updateStats();
-      if (currentHp <= 0) {
-        let dropChance = Math.random();
-        if (dropChance < 0.4 && inventory.length < inventoryLimit) {
-          const item = itemList[Math.floor(Math.random() * itemList.length)];
-          inventory.push(item);
-          updateInventory();
-        }
-        points += 10 + extraKillPoints;
-        exp += 10;
-        if (exp >= level * 50) {
+      hp -= dmg;
+      if (hp <= 0) {
+        points += 5;
+        exp += 20;
+        if (exp >= expToNext) {
           level++;
           exp = 0;
+          expToNext += 50;
+          showNotification('Level up!');
+        }
+        if (Math.random() < dropRate) {
+          const item = itemPool[Math.floor(Math.random() * itemPool.length)];
+          if (inventory.length < inventoryLimit) {
+            inventory.push(item);
+            showNotification(`You got: ${item}`);
+          } else {
+            showNotification('Inventory full!');
+          }
         }
         maxHp += 20;
-        currentHp = maxHp;
-        coinSize++;
-        document.getElementById('coin').style.width = coinSize + 'px';
+        hp = maxHp;
+        document.getElementById('coin').style.width = parseInt(document.getElementById('coin').style.width || 160) + 1 + 'px';
+        document.getElementById('coin').style.height = parseInt(document.getElementById('coin').style.height || 160) + 1 + 'px';
+      }
+      updateUI();
+    }
+
+    function regenEnergy() {
+      if (energy < energyLimit) {
+        energy += energyRegenRate;
+        if (energy > energyLimit) energy = energyLimit;
+        updateUI();
       }
     }
 
-    function regenEnergy(val) {
-      energy = Math.min(energy + val, energyLimit);
-      updateStats();
+    setInterval(regenEnergy, 5000);
+
+    function openShop() {
+      document.getElementById('shop').style.display = 'block';
     }
 
-    setInterval(() => regenEnergy(regenRate), 5000);
-
-    function updateStats() {
-      document.getElementById('points').innerText = points;
-      document.getElementById('energy').innerText = energy;
-      document.getElementById('energyLimit').innerText = energyLimit;
-      document.getElementById('hp').innerText = Math.max(0, currentHp);
-      document.getElementById('maxHp').innerText = maxHp;
-      document.getElementById('hpBar').style.width = (currentHp / maxHp * 100) + '%';
-      document.getElementById('exp').innerText = exp;
-      document.getElementById('level').innerText = level;
+    function closeShop() {
+      document.getElementById('shop').style.display = 'none';
     }
 
-    function updateInventory() {
-      document.getElementById('inventoryItems').innerText = inventory.join(', ');
-      document.getElementById('inventorySize').innerText = inventory.length;
+    function buyUpgrade(type) {
+      const costs = {
+        dmg: 10,
+        energyLimit: 15,
+        energyRegen: 20,
+        expBoost: 25,
+        inventory: 30,
+        dropRate: 35
+      };
+      if (points >= costs[type]) {
+        points -= costs[type];
+        switch(type) {
+          case 'dmg': dmg++; break;
+          case 'energyLimit': energyLimit++; break;
+          case 'energyRegen': energyRegenRate++; break;
+          case 'expBoost': expToNext = Math.floor(expToNext * 0.9); break;
+          case 'inventory': inventoryLimit++; break;
+          case 'dropRate': dropRate += 0.05; break;
+        }
+        showNotification(`Upgraded ${type}!`);
+        updateUI();
+      } else {
+        showNotification('Not enough QurłaPoints!');
+      }
     }
 
-    function toggleInventory() {
-      document.getElementById('inventory').classList.toggle('hidden');
-    }
-
-    function toggleShop() {
-      document.getElementById('shop').classList.toggle('hidden');
-    }
-
-    function watchAd() {
-      points += 10;
-      updateStats();
-      alert("You watched a fake ad and earned +10 QurłaPoints!");
-    }
-
-    function renderShop() {
-      const shopDiv = document.getElementById('shopItems');
-      shopList.forEach((item, i) => {
-        const btn = document.createElement('button');
-        btn.innerText = `${item.name} (${item.cost}QP)`;
-        btn.onclick = () => {
-          if (points >= item.cost) {
-            points -= item.cost;
-            item.effect();
-            updateStats();
-          } else {
-            alert("Not enough QurłaPoints!");
-          }
-        };
-        shopDiv.appendChild(btn);
+    function openInventory() {
+      const inv = document.getElementById('inventory');
+      inv.style.display = inv.style.display === 'none' ? 'flex' : 'none';
+      inv.innerHTML = '';
+      inventory.forEach(item => {
+        const div = document.createElement('div');
+        div.className = 'item';
+        div.style.backgroundImage = `url('${itemImages[item]}')`;
+        div.title = item;
+        inv.appendChild(div);
       });
     }
 
-    renderShop();
-    updateStats();
+    function watchAd() {
+      showNotification('You watched an ad! +10 QurłaPoints');
+      points += 10;
+      updateUI();
+    }
+
+    document.getElementById('coin').addEventListener('click', clickCoin);
+    updateUI();
   </script>
 </body>
 </html>
