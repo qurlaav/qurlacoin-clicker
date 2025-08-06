@@ -1,132 +1,109 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Click Qurlacoin to earn points! Join channels, follow social media and invite friends to earn more!">
-  <title>Qurlacoin Clicker</title>
-  <link rel="stylesheet" href="style.css">
-  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>QurlaCoin Clicker</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: radial-gradient(circle, #ffcc00, #ff9900);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      color: #222;
+    }
+    .header {
+      margin-top: 20px;
+      font-size: 1.8em;
+      font-weight: bold;
+      text-align: center;
+    }
+    .coin-container {
+      margin: 30px 0;
+      position: relative;
+    }
+    .coin {
+      width: 150px;
+      height: 150px;
+      background: url('https://pbs.twimg.com/profile_images/1947189329786281984/dfkIBBZt_400x400.jpg') no-repeat center/contain;
+      cursor: pointer;
+      transition: transform 0.1s ease;
+    }
+    .coin:active {
+      transform: scale(0.9);
+    }
+    .points {
+      font-size: 2em;
+      margin: 10px 0;
+    }
+    .buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+    }
+    .button {
+      background: white;
+      border: none;
+      border-radius: 8px;
+      padding: 10px 16px;
+      font-size: 0.95em;
+      cursor: pointer;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+      transition: background 0.2s ease;
+    }
+    .button:hover {
+      background: #eee;
+    }
+    .footer {
+      margin-top: auto;
+      padding: 20px;
+      font-size: 0.85em;
+      text-align: center;
+    }
+  </style>
 </head>
 <body>
-  <div id="app">
-    <h1>Qurlacoin Clicker</h1>
+  <div class="header">QurlaCoin Clicker</div>
 
-    <div id="coin-wrapper">
-      <img id="coin" src="https://upload.wikimedia.org/wikipedia/commons/4/43/Gold_coin_icon.png" alt="Qurlacoin">
-    </div>
+  <div class="coin-container">
+    <div class="coin" id="coin"></div>
+  </div>
 
-    <p id="points">Points: 0</p>
+  <div class="points">Points: <span id="points">0</span></div>
 
-    <div id="referral">
-      <p>Your referral link:</p>
-      <input id="ref-link" readonly>
-      <button onclick="copyReferral()">Copy</button>
-    </div>
+  <div class="buttons">
+    <button class="button">Join Telegram</button>
+    <button class="button">Follow on X</button>
+    <button class="button">Daily Bonus</button>
+    <button class="button">Invite Friends</button>
+    <button class="button">Watch Ad</button>
+  </div>
 
-    <h2>Earn more Qurłapoints:</h2>
-    <div class="tasks">
-      <button onclick="completeTask('followX')">Follow us on X</button>
-      <button onclick="completeTask('joinTG')">Join our Telegram</button>
-      <button onclick="completeTask('likePost')">Like our Post</button>
-      <button onclick="completeTask('commentPost')">Comment on our Post</button>
-      <button onclick="completeTask('invite')">Invite a Friend</button>
-      <button onclick="completeTask('daily')">Daily Login Bonus</button>
-      <button onclick="completeTask('watchAd')">Watch a Short Ad</button>
-    </div>
-
-    <div id="upgrades">
-      <h2>Upgrades</h2>
-      <button onclick="buyUpgrade('clickPower')">Increase Click Power (Cost: 100)</button>
-      <button onclick="buyUpgrade('autoClicker')">Buy Auto Clicker (Cost: 500)</button>
-    </div>
+  <div class="footer">
+    Your referral link: <br>
+    <input type="text" id="refLink" value="https://yourgame.com/?ref=YOURID" readonly style="width:80%">
+    <button class="button" onclick="copyRef()">Copy</button>
   </div>
 
   <script>
     let points = 0;
-    let clickPower = 1;
-    let refCode = '';
-    let autoClickers = 0;
-
-    const params = new URLSearchParams(window.location.search);
-    const tgUser = window.Telegram.WebApp.initDataUnsafe.user || { id: 'guest' };
-    const userId = tgUser.id;
-
-    if (params.has('startparam')) {
-      refCode = params.get('startparam');
-    }
-
-    const coin = document.getElementById('coin');
-    const pointsDisplay = document.getElementById('points');
-    const refInput = document.getElementById('ref-link');
-
-    function updatePoints() {
-      pointsDisplay.textContent = `Points: ${points}`;
-    }
-
-    function copyReferral() {
-      navigator.clipboard.writeText(refInput.value);
-      alert("Referral link copied!");
-    }
-
-    function rewardPoints(amount, reason) {
-      points += amount;
-      alert(`You earned ${amount} Qurłapoints for ${reason}!`);
-      updatePoints();
-    }
-
-    coin.addEventListener('click', () => {
-      points += clickPower;
-      updatePoints();
+    const pointsSpan = document.getElementById("points");
+    document.getElementById("coin").addEventListener("click", () => {
+      points++;
+      pointsSpan.textContent = points;
     });
 
-    function buyUpgrade(type) {
-      if (type === 'clickPower' && points >= 100) {
-        points -= 100;
-        clickPower++;
-        alert('Click Power increased!');
-      } else if (type === 'autoClicker' && points >= 500) {
-        points -= 500;
-        autoClickers++;
-        alert('Auto Clicker added!');
-      } else {
-        alert('Not enough points!');
-        return;
-      }
-      updatePoints();
+    function copyRef() {
+      const input = document.getElementById("refLink");
+      input.select();
+      input.setSelectionRange(0, 99999);
+      document.execCommand("copy");
+      alert("Referral link copied!");
     }
-
-    function completeTask(task) {
-      switch (task) {
-        case 'followX': rewardPoints(50, 'following on X'); break;
-        case 'joinTG': rewardPoints(40, 'joining Telegram'); break;
-        case 'likePost': rewardPoints(30, 'liking a post'); break;
-        case 'commentPost': rewardPoints(30, 'commenting'); break;
-        case 'invite': rewardPoints(100, 'inviting a friend'); break;
-        case 'daily': rewardPoints(25, 'daily bonus'); break;
-        case 'watchAd': rewardPoints(20, 'watching an ad'); break;
-      }
-    }
-
-    function autoClickLoop() {
-      if (autoClickers > 0) {
-        points += autoClickers;
-        updatePoints();
-      }
-      setTimeout(autoClickLoop, 1000);
-    }
-
-    function setupReferralLink() {
-      const refLink = `${window.location.origin + window.location.pathname}?startparam=${userId}`;
-      refInput.value = refLink;
-    }
-
-    updatePoints();
-    setupReferralLink();
-    autoClickLoop();
-
-    Telegram.WebApp.ready();
-    Telegram.WebApp.expand();
   </script>
 </body>
 </html>
