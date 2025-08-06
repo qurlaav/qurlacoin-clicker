@@ -10,7 +10,7 @@ const pointsEl = document.getElementById('points');
 const energyEl = document.getElementById('energy');
 const dmgEl = document.getElementById('dmg');
 const levelEl = document.getElementById('level');
-const progressEl = document.getElementById('progress');
+const energyFill = document.getElementById('energy-fill');
 const coinEl = document.getElementById('coin');
 const shopEl = document.getElementById('shop');
 const inventoryEl = document.getElementById('inventory');
@@ -21,7 +21,7 @@ function updateUI() {
   energyEl.textContent = `Energy: ${energy}/${maxEnergy}`;
   dmgEl.textContent = `DMG: ${dmg}`;
   levelEl.textContent = `EXP: ${exp} | LVL: ${level}`;
-  progressEl.style.width = `${(energy / maxEnergy) * 100}%`;
+  energyFill.style.width = `${(energy / maxEnergy) * 100}%`;
 }
 
 function gainExp(amount) {
@@ -88,7 +88,6 @@ document.getElementById('buyRegen').addEventListener('click', () => {
 function addItem(icon) {
   const item = document.createElement('div');
   item.textContent = icon;
-  item.className = 'inventory-item';
   inventoryGrid.appendChild(item);
 }
 
