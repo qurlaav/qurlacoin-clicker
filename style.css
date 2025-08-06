@@ -144,14 +144,14 @@ h1 {
   font-size: 22px;
 }
 
-.shop-buttons, #missionList {
+.shop-buttons {
   display: flex;
   flex-direction: column;
   gap: 10px;
   margin-top: 15px;
 }
 
-.shop-buttons button, #missionList div {
+.shop-buttons button {
   background: #333;
   color: #ddd;
   border: 1px solid #555;
@@ -160,7 +160,7 @@ h1 {
   transition: background 0.2s;
 }
 
-.shop-buttons button:hover:not(:disabled), #missionList div:hover {
+.shop-buttons button:hover:not(:disabled) {
   background: #444;
 }
 
@@ -187,25 +187,6 @@ h1 {
 
 .inventory-grid div:hover {
   transform: scale(1.1);
-}
-
-#minigameArea {
-  position: relative;
-  height: 200px;
-  background: #333;
-  border-radius: 8px;
-  overflow: hidden;
-}
-
-.minigame-coin {
-  position: absolute;
-  width: 40px;
-  cursor: pointer;
-  transition: transform 0.2s;
-}
-
-.minigame-coin:hover {
-  transform: scale(1.2);
 }
 
 .notification {
