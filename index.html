@@ -24,18 +24,14 @@
 
     <div class="stats">
       <p id="points">QurłaPoints: 0</p>
-      <p id="gems">QurlaGems: 0</p>
       <p id="energy">Energy: 10/10</p>
       <p id="dmg">DMG: 1</p>
       <p id="level">EXP: 0 | LVL: 1</p>
-      <p id="rank">Rank: Unranked</p>
     </div>
 
     <div class="buttons">
       <button id="inventoryBtn">Inventory</button>
       <button id="shopBtn">Shop</button>
-      <button id="missionsBtn">Missions</button>
-      <button id="prestigeBtn" disabled>Prestige</button>
       <button id="adBtn">Watch Ad (+10 QurłaPoints)</button>
     </div>
 
@@ -45,26 +41,12 @@
         <button id="buyDmg">+1 DMG (Cost: 100)</button>
         <button id="buyEnergy">+5 Max Energy (Cost: 50)</button>
         <button id="buyRegen">+1 Energy Regen (Cost: 30)</button>
-        <button id="buyAutoHit">+1 Auto-Hit (Cost: 200)</button>
-        <button id="buyDropRate">+1% Drop Rate (Cost: 100)</button>
-        <button id="buyCoinSkin">New Coin Skin (Cost: 500)</button>
       </div>
     </div>
 
     <div id="inventory" class="panel hidden">
       <h2>Inventory</h2>
       <div class="inventory-grid" id="inventoryGrid"></div>
-    </div>
-
-    <div id="missions" class="panel hidden">
-      <h2>Missions</h2>
-      <div id="missionList"></div>
-    </div>
-
-    <div id="minigame" class="panel hidden">
-      <h2>Minigame: Catch the Coins!</h2>
-      <p>Click the coins before they disappear!</p>
-      <div id="minigameArea"></div>
     </div>
 
     <audio id="clickSound" src="https://freesound.org/data/previews/171/171671_2435678-lq.mp3"></audio>
