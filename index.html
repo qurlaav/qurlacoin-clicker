@@ -1,225 +1,224 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>QurlaCoin Clicker</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Qurłacoin Clicker</title>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
   <style>
     body {
       margin: 0;
-      font-family: Arial, sans-serif;
+      padding: 0;
+      font-family: 'Press Start 2P', cursive;
+      background: linear-gradient(135deg, #111, #222);
+      color: #fff;
       text-align: center;
-      background: linear-gradient(to bottom, #ffa500, #ffcc00);
-      color: #333;
+      overflow-x: hidden;
     }
-    h1 {
-      margin-top: 20px;
-      font-size: 2em;
-    }
-    .coin {
-      cursor: pointer;
+
+    #coin {
+      width: 150px;
       transition: transform 0.1s;
+      cursor: pointer;
     }
-    .coin:active {
+
+    #coin:active {
       transform: scale(0.95);
     }
-    .counter {
-      font-size: 1.5em;
-      margin: 10px;
+
+    .stats, .shop, .inventory, .buttons {
+      margin-top: 20px;
     }
-    .bar-container {
-      width: 80%;
+
+    .hp-bar {
       height: 20px;
-      background: #ddd;
+      background: red;
       margin: 10px auto;
+      width: 80%;
       border-radius: 10px;
     }
-    .bar {
+
+    .hp-inner {
       height: 100%;
-      background: red;
+      background: lime;
       width: 100%;
       border-radius: 10px;
     }
-    .buttons, .inventory, .referral {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 10px;
-      margin-top: 20px;
-    }
+
     button {
+      background: #333;
+      color: #fff;
+      border: 2px solid #fff;
       padding: 10px;
-      font-size: 1em;
-      border-radius: 5px;
-      border: none;
-      background: white;
+      margin: 5px;
       cursor: pointer;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+      font-family: 'Press Start 2P', cursive;
+      font-size: 10px;
     }
-    .footer {
-      margin: 20px;
-      font-size: 0.9em;
+
+    #inventoryItems {
+      font-size: 10px;
+      max-width: 90%;
+      margin: 0 auto;
     }
-    input {
-      padding: 5px;
-      font-size: 1em;
-    }
+
+    .hidden { display: none; }
   </style>
 </head>
 <body>
-  <h1>QurlaCoin</h1>
-  <img src="qurlacoin-clicker-gold-coin.png" id="coin" class="coin" width="200" height="200" />
-  <div class="bar-container">
-    <div class="bar" id="hpBar"></div>
+  <h1>QURLACOIN CLICKER</h1>
+
+  <div class="stats">
+    <div>QurłaPoints: <span id="points">0</span></div>
+    <div>Energy: <span id="energy">10</span>/<span id="energyLimit">10</span></div>
+    <div>EXP: <span id="exp">0</span> | LVL: <span id="level">1</span></div>
   </div>
-  <div class="counter">QurłaPoints: <span id="points">0</span></div>
-  <div class="counter">EXP: <span id="exp">0</span></div>
-  <div class="counter">Energy: <span id="energy">10</span>/10</div>
-  <div class="referral">
-    <label>Referral link:</label>
-    <input type="text" value="https://qurlaav.github.io/qurlacoin-clicker" id="referralLink" readonly />
-    <button onclick="copyReferral()">Copy</button>
-  </div>
+
+  <div class="hp-bar"><div class="hp-inner" id="hpBar"></div></div>
+  <div>HP: <span id="hp">100</span>/<span id="maxHp">100</span></div>
+
+  <img src="qurlacoin-clicker-gold-coin.png" id="coin" onclick="clickCoin()">
+
   <div class="buttons">
-    <button onclick="joinTelegram()">Join Telegram</button>
-    <button onclick="followX()">Follow on X</button>
-    <button onclick="dailyBonus()">Daily Bonus</button>
-    <button onclick="inviteFriends()">Invite Friends</button>
-    <button onclick="watchAd()">Watch Ad</button>
-    <button onclick="openShop()">Shop</button>
-    <button onclick="openInventory()">Inventory</button>
+    <button onclick="toggleInventory()">Inventory</button>
+    <button onclick="toggleShop()">Shop</button>
+    <button onclick="watchAd()">Watch Ad (+10 QurłaPoints)</button>
+    <button onclick="window.open('https://t.me/QURLAPOLISHPOWER','_blank')">Join Telegram</button>
+    <button onclick="window.open('https://x.com/qurlaav','_blank')">Follow on X</button>
   </div>
 
-  <div id="inventorySection" style="display:none; margin-top: 20px;">
-    <h3>Inventory (<span id="inventoryCount">0</span>/<span id="inventoryLimit">10</span>)</h3>
-    <ul id="inventoryList"></ul>
+  <div class="inventory hidden" id="inventory">
+    <h2>Inventory (<span id="inventorySize">0</span>/10)</h2>
+    <div id="inventoryItems"></div>
   </div>
 
-  <div class="footer">
-    QurlaCoin © 2025
+  <div class="shop hidden" id="shop">
+    <h2>Qurła Shop</h2>
+    <div id="shopItems"></div>
   </div>
 
   <script>
-    let coin = document.getElementById('coin');
     let points = 0;
-    let exp = 0;
     let energy = 10;
-    let energyMax = 10;
+    let energyLimit = 10;
+    let regenRate = 1;
     let damage = 1;
-    let hp = 100;
     let maxHp = 100;
-    let coinSize = 200;
+    let currentHp = 100;
+    let coinSize = 150;
+    let exp = 0;
+    let level = 1;
     let inventory = [];
     let inventoryLimit = 10;
 
-    const pointsDisplay = document.getElementById('points');
-    const expDisplay = document.getElementById('exp');
-    const energyDisplay = document.getElementById('energy');
-    const hpBar = document.getElementById('hpBar');
-    const inventoryList = document.getElementById('inventoryList');
-    const inventoryCount = document.getElementById('inventoryCount');
-    const inventoryLimitDisplay = document.getElementById('inventoryLimit');
+    const itemList = [
+      'Energy Potion', 'Attack Potion', 'Passat B2 NFT Shard',
+      'Passat B3 NFT Shard', 'Passat B4 NFT Shard', 'Passat B5 NFT Shard',
+      'Skarpetki w sandałach', 'Żulikowy Beret', 'Paragon z Biedronki',
+      'Mentolowe Papierosy', 'Magnetyczny Wieszak na Dywanik', 'Kubek z „Kocham żonę”',
+      'Stary Rachunek z Telekomunikacji', 'Breloczek z Papieżem',
+      'Złoty Łańcuch z Bazaru', 'Zdrapka z Totolotka (przegrana)',
+      'Talon na flaszkę', 'Obrączka po Dziadku', 'Wlepka Tuning Team',
+      'Plastikowy Jezus na Deskę Rozdzielczą'
+    ];
 
-    function updateDisplays() {
-      pointsDisplay.textContent = points;
-      expDisplay.textContent = exp;
-      energyDisplay.textContent = energy;
-      hpBar.style.width = (hp / maxHp * 100) + '%';
-      inventoryCount.textContent = inventory.length;
-      inventoryLimitDisplay.textContent = inventoryLimit;
-    }
+    const shopList = [
+      { name: "+1 DMG", cost: 10, effect: () => damage++ },
+      { name: "+1 Max Energy", cost: 10, effect: () => energyLimit++ },
+      { name: "+1 Energy Regen Rate", cost: 15, effect: () => regenRate++ },
+      { name: "+1 Inventory Slot", cost: 20, effect: () => inventoryLimit++ },
+      { name: "+5% Item Drop Chance", cost: 25, effect: () => {} },
+      { name: "+5% EXP Gain", cost: 25, effect: () => {} },
+      { name: "Auto Clicker (1/s)", cost: 50, effect: () => setInterval(clickCoin, 1000) },
+      { name: "+1 Coin Size", cost: 10, effect: () => coinSize += 1 },
+      { name: "+5 QurłaPoints per kill", cost: 100, effect: () => extraKillPoints += 5 },
+      { name: "+1 Energy Regen Every 2s", cost: 75, effect: () => setInterval(() => regenEnergy(1), 2000) }
+    ];
 
-    function regenerateEnergy() {
-      if (energy < energyMax) {
-        energy++;
-        updateDisplays();
-      }
-    }
+    let extraKillPoints = 0;
 
-    setInterval(regenerateEnergy, 5000);
-
-    coin.addEventListener('click', () => {
-      if (energy <= 0) return alert('Out of energy!');
+    function clickCoin() {
+      if (energy < 1) return;
+      currentHp -= damage;
       energy--;
-      hp -= damage;
-      updateDisplays();
-      if (hp <= 0) {
-        points += 10;
-        exp += 5;
-        dropItem();
+      updateStats();
+      if (currentHp <= 0) {
+        let dropChance = Math.random();
+        if (dropChance < 0.4 && inventory.length < inventoryLimit) {
+          const item = itemList[Math.floor(Math.random() * itemList.length)];
+          inventory.push(item);
+          updateInventory();
+        }
+        points += 10 + extraKillPoints;
+        exp += 10;
+        if (exp >= level * 50) {
+          level++;
+          exp = 0;
+        }
         maxHp += 20;
-        hp = maxHp;
+        currentHp = maxHp;
         coinSize++;
-        coin.width = coinSize;
-        coin.height = coinSize;
-      }
-    });
-
-    function dropItem() {
-      const chance = Math.random();
-      if (chance <= 0.4 && inventory.length < inventoryLimit) {
-        const items = [
-          'Energy Potion', 'Attack Potion', 'Passat B2 NFT Shard', 'Passat B3 NFT Shard',
-          'Passat B4 NFT Shard', 'Passat B5 NFT Shard', 'Skarpetki w sandałach',
-          'Paragon z Biedronki', 'Kultowy Żulikowy Beret', 'Papierosy Mentolowe Skiny'
-        ];
-        const item = items[Math.floor(Math.random() * items.length)];
-        inventory.push(item);
-        alert('You got: ' + item);
+        document.getElementById('coin').style.width = coinSize + 'px';
       }
     }
 
-    function copyReferral() {
-      const link = document.getElementById('referralLink');
-      link.select();
-      document.execCommand('copy');
-      alert('Referral link copied!');
+    function regenEnergy(val) {
+      energy = Math.min(energy + val, energyLimit);
+      updateStats();
     }
 
-    function joinTelegram() {
-      window.open('https://t.me/QURLAPOLISHPOWER', '_blank');
+    setInterval(() => regenEnergy(regenRate), 5000);
+
+    function updateStats() {
+      document.getElementById('points').innerText = points;
+      document.getElementById('energy').innerText = energy;
+      document.getElementById('energyLimit').innerText = energyLimit;
+      document.getElementById('hp').innerText = Math.max(0, currentHp);
+      document.getElementById('maxHp').innerText = maxHp;
+      document.getElementById('hpBar').style.width = (currentHp / maxHp * 100) + '%';
+      document.getElementById('exp').innerText = exp;
+      document.getElementById('level').innerText = level;
     }
 
-    function followX() {
-      window.open('https://x.com/qurlaav', '_blank');
+    function updateInventory() {
+      document.getElementById('inventoryItems').innerText = inventory.join(', ');
+      document.getElementById('inventorySize').innerText = inventory.length;
     }
 
-    function dailyBonus() {
-      points += 10;
-      updateDisplays();
-      alert('You received 10 QurlaPoints!');
+    function toggleInventory() {
+      document.getElementById('inventory').classList.toggle('hidden');
     }
 
-    function inviteFriends() {
-      alert('Invite your friends using your referral link!');
+    function toggleShop() {
+      document.getElementById('shop').classList.toggle('hidden');
     }
 
     function watchAd() {
       points += 10;
-      updateDisplays();
-      alert('Thanks for watching an ad! You earned 10 QurlaPoints!');
+      updateStats();
+      alert("You watched a fake ad and earned +10 QurłaPoints!");
     }
 
-    function openShop() {
-      alert('Shop coming soon!');
-    }
-
-    function openInventory() {
-      const invSec = document.getElementById('inventorySection');
-      invSec.style.display = invSec.style.display === 'none' ? 'block' : 'none';
-      renderInventory();
-    }
-
-    function renderInventory() {
-      inventoryList.innerHTML = '';
-      inventory.forEach(item => {
-        const li = document.createElement('li');
-        li.textContent = item;
-        inventoryList.appendChild(li);
+    function renderShop() {
+      const shopDiv = document.getElementById('shopItems');
+      shopList.forEach((item, i) => {
+        const btn = document.createElement('button');
+        btn.innerText = `${item.name} (${item.cost}QP)`;
+        btn.onclick = () => {
+          if (points >= item.cost) {
+            points -= item.cost;
+            item.effect();
+            updateStats();
+          } else {
+            alert("Not enough QurłaPoints!");
+          }
+        };
+        shopDiv.appendChild(btn);
       });
     }
 
-    updateDisplays();
+    renderShop();
+    updateStats();
   </script>
 </body>
 </html>
