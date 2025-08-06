@@ -7,26 +7,13 @@
   <style>
     body {
       margin: 0;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: linear-gradient(180deg, #ff9900 0%, #ffcc00 100%);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      min-height: 100vh;
+      font-family: Arial, sans-serif;
+      background: linear-gradient(to bottom, #f90, #fc0);
       color: #222;
-    }
-    .container {
-      width: 100%;
-      max-width: 400px;
-      padding: 20px;
-      box-sizing: border-box;
       text-align: center;
     }
-    .header {
-      font-size: 2em;
-      font-weight: bold;
-      margin-top: 10px;
-      margin-bottom: 20px;
+    h1 {
+      margin-top: 30px;
     }
     .coin {
       width: 160px;
@@ -34,86 +21,90 @@
       margin: 20px auto;
       cursor: pointer;
       transition: transform 0.1s ease;
+      display: block;
     }
     .coin:active {
-      transform: scale(0.9);
+      transform: scale(0.95);
     }
     .points {
-      font-size: 2.4em;
+      font-size: 32px;
+      margin: 10px 0;
       font-weight: bold;
-      margin: 10px 0 20px;
     }
     .referral {
-      margin: 15px 0;
-      font-size: 0.9em;
-      word-break: break-all;
+      margin: 10px 0;
+      font-size: 14px;
     }
-    .buttons-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 10px;
-      margin: 20px 0;
+    input[type="text"] {
+      width: 300px;
+      padding: 5px;
+      text-align: center;
     }
-    .button {
-      background: white;
+    button {
+      padding: 10px 20px;
+      margin: 8px;
+      font-size: 16px;
       border: none;
-      border-radius: 10px;
-      padding: 12px;
-      font-size: 0.95em;
+      border-radius: 8px;
+      background-color: white;
       cursor: pointer;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-      transition: background 0.2s ease;
-      text-decoration: none;
-      color: #222;
-      display: flex;
-      justify-content: center;
-      align-items: center;
+      transition: background-color 0.2s;
     }
-    .button:hover {
-      background: #eee;
+    button:hover {
+      background-color: #eee;
     }
-    .footer {
-      font-size: 0.85em;
-      margin-top: auto;
-      padding: 15px;
+    footer {
+      margin: 20px 0;
+      font-size: 12px;
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <div class="header">QurlaCoin</div>
-    <img src="qurlacoin-clicker-gold-coin.png" alt="QurlaCoin" class="coin" id="coin">
-    <div class="points"><span id="points">0</span></div>
-    <div class="referral">
-      Referral link:<br>
-      <input type="text" id="refLink" value="https://qurlaav.github.io/qurlacoin-clicker" readonly style="width: 100%; margin-top: 5px;">
-      <button class="button" onclick="copyRef()">Copy</button>
-    </div>
-    <div class="buttons-grid">
-      <a href="https://t.me/qurlacoin" target="_blank" class="button">Join Telegram</a>
-      <a href="https://x.com/qurlacoin" target="_blank" class="button">Follow on X</a>
-      <a href="#" class="button">Daily Bonus</a>
-      <a href="#" class="button">Invite Friends</a>
-      <a href="#" class="button">Watch Ad</a>
-      <a href="#" class="button">Shop</a>
-    </div>
+  <h1>QurlaCoin</h1>
+  <img src="qurlacoin-clicker-gold-coin.png" alt="QurlaCoin" class="coin" id="coin" />
+  <div class="points" id="points">0</div>
+
+  <div class="referral">
+    Referral link:<br/>
+    <input type="text" id="referral" value="https://qurlaav.github.io/qurlacoin-clicker" readonly />
+    <br/>
+    <button onclick="copyReferral()">Copy</button>
   </div>
-  <div class="footer">QurlaCoin © 2025</div>
+
+  <div>
+    <button onclick="window.open('https://t.me/qurla', '_blank')">Join Telegram</button>
+    <button onclick="window.open('https://twitter.com/qurlaofficial', '_blank')">Follow on X</button>
+  </div>
+  <div>
+    <button>Daily Bonus</button>
+    <button>Invite Friends</button>
+  </div>
+  <div>
+    <button>Watch Ad</button>
+    <button>Shop</button>
+  </div>
+
+  <footer>
+    QurlaCoin © 2025
+  </footer>
+
   <script>
     let points = 0;
-    const pointsSpan = document.getElementById("points");
-    document.getElementById("coin").addEventListener("click", () => {
+    const pointsEl = document.getElementById('points');
+    const coin = document.getElementById('coin');
+
+    coin.addEventListener('click', () => {
       points++;
-      pointsSpan.textContent = points;
+      pointsEl.textContent = points;
     });
-    function copyRef() {
-      const input = document.getElementById("refLink");
-      input.select();
-      input.setSelectionRange(0, 99999);
+
+    function copyReferral() {
+      const copyText = document.getElementById("referral");
+      copyText.select();
+      copyText.setSelectionRange(0, 99999);
       document.execCommand("copy");
       alert("Referral link copied!");
     }
   </script>
 </body>
 </html>
-
