@@ -44,7 +44,7 @@ h1 {
   animation: slideIn 0.5s forwards;
 }
 
-#energy-bar {
+#energy-bar, #coin-hp-bar {
   width: 100%;
   height: 20px;
   background: #333;
@@ -61,15 +61,26 @@ h1 {
   transition: width 0.3s ease;
 }
 
+#coin-hp-fill {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, #ff4444, #ff7777);
+  transition: width 0.3s ease;
+}
+
 #coin {
   width: 120px;
   cursor: pointer;
   margin: 20px 0;
-  transition: transform 0.1s ease;
+  transition: transform 0.1s ease, opacity 0.5s ease;
 }
 
 #coin:hover {
   transform: scale(1.1);
+}
+
+#coin.defeated {
+  opacity: 0;
 }
 
 .stats p {
@@ -165,9 +176,13 @@ h1 {
   border: 1px solid #555;
   border-radius: 6px;
   padding: 10px;
-  font-size: 28px;
   cursor: pointer;
   transition: transform 0.2s;
+}
+
+.inventory-grid div img {
+  width: 100%;
+  height: auto;
 }
 
 .inventory-grid div:hover {
