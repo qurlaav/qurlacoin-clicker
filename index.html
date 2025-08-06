@@ -1,168 +1,53 @@
 <!DOCTYPE html>
-<html lang="pl">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Qurłacoin Clicker</title>
-  <style>
-    body {
-      font-family: 'Courier New', monospace;
-      background: #1a1a1a;
-      color: #eee;
-      margin: 0;
-      padding: 0;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-    h1 {
-      margin-top: 20px;
-      font-size: 2em;
-      letter-spacing: 2px;
-    }
-    #hp-bar-container {
-      width: 80%;
-      height: 20px;
-      background: #444;
-      border-radius: 10px;
-      margin: 15px;
-      overflow: hidden;
-    }
-    #hp-bar {
-      height: 100%;
-      background: limegreen;
-      width: 100%;
-      transition: width 0.3s;
-    }
-    #coin {
-      width: 120px;
-      cursor: pointer;
-      transition: transform 0.1s ease-in-out;
-      border-radius: 50%;
-      border: 3px solid #555;
-    }
-    #coin:active {
-      transform: scale(0.9);
-    }
-    #stats {
-      margin: 10px;
-      font-size: 1.1em;
-      text-align: center;
-    }
-    #buttons {
-      margin: 15px;
-    }
-    #buttons button {
-      background: #333;
-      border: 1px solid #555;
-      color: #eee;
-      padding: 8px 12px;
-      margin: 3px;
-      cursor: pointer;
-      border-radius: 4px;
-      font-size: 0.9em;
-    }
-    #buttons button:hover {
-      background: #444;
-    }
-    #shop {
-      display: none;
-      margin: 20px;
-      padding: 10px;
-      background: #222;
-      border: 1px solid #555;
-      border-radius: 8px;
-      width: 90%;
-      max-width: 600px;
-      text-align: center;
-    }
-    #shop h2 {
-      margin-top: 0;
-    }
-    #shop button {
-      background: #444;
-      border: 1px solid #666;
-      color: #ddd;
-      padding: 6px 10px;
-      margin: 5px;
-      border-radius: 4px;
-      font-size: 0.85em;
-    }
-    #shop button:hover {
-      background: #555;
-    }
-    #inventory {
-      display: none;
-      grid-template-columns: repeat(auto-fill, 64px);
-      gap: 8px;
-      background: #222;
-      padding: 10px;
-      border-radius: 10px;
-      margin: 15px;
-    }
-    .slot {
-      width: 64px;
-      height: 64px;
-      background: #333;
-      border: 1px solid #555;
-      position: relative;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .slot img {
-      max-width: 60px;
-      max-height: 60px;
-    }
-    .tooltip {
-      visibility: hidden;
-      background: rgba(0,0,0,0.8);
-      color: #fff;
-      text-align: center;
-      padding: 4px;
-      border-radius: 4px;
-      position: absolute;
-      bottom: 70px;
-      left: 50%;
-      transform: translateX(-50%);
-      font-size: 0.75em;
-      z-index: 1;
-    }
-    .slot:hover .tooltip {
-      visibility: visible;
-    }
-    #messages p {
-      margin: 3px;
-      color: #0f0;
-      font-size: 0.85em;
-    }
-  </style>
+  <title>QURLACOIN CLICKER</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <h1>QURLACOIN CLICKER</h1>
-  <div id="hp-bar-container">
-    <div id="hp-bar"></div>
+  <div class="container">
+    <h1>QURLACOIN CLICKER</h1>
+
+    <div id="progress-bar">
+      <div id="progress"></div>
+    </div>
+
+    <img id="coin" src="img/qurlacoin-clicker-gold-coin.png" alt="Qurłacoin" />
+
+    <div class="stats">
+      <p id="points">QurłaPoints: 0</p>
+      <p id="energy">Energy: 10/10</p>
+      <p id="dmg">DMG: 1</p>
+      <p id="level">EXP: 0 | LVL: 1</p>
+    </div>
+
+    <div class="buttons">
+      <button id="inventoryBtn">Inventory</button>
+      <button id="shopBtn">Shop</button>
+      <button id="adBtn">Watch Ad (+10 QurłaPoints)</button>
+    </div>
+
+    <div id="shop" class="panel hidden">
+      <h2>Qurła Shop</h2>
+      <div class="shop-buttons">
+        <button id="buyDmg">+1 DMG (Cost: 320)</button>
+        <button id="buyEnergy">+Max Energy (Cost: 40)</button>
+        <button id="buyRegen">+Energy Regen Rate (Cost: 10)</button>
+      </div>
+    </div>
+
+    <div id="inventory" class="panel hidden">
+      <h2>Inventory</h2>
+      <div class="inventory-grid" id="inventoryGrid">
+        <!-- Items dynamically added here -->
+      </div>
+    </div>
   </div>
-  <img id="coin" src="img/qurlacoin-clicker-gold-coin.png" alt="Qurłacoin">
-  <div id="stats">
-    <p>QurłaPoints: <span id="points">0</span></p>
-    <p>Energy: <span id="energy">10</span>/<span id="maxEnergy">10</span></p>
-    <p>DMG: <span id="dmg">1</span></p>
-    <p>EXP: <span id="exp">0</span> | LVL: <span id="level">1</span></p>
-  </div>
-  <div id="buttons">
-    <button onclick="toggleInventory()">Inventory</button>
-    <button onclick="toggleShop()">Shop</button>
-    <button onclick="watchAd()">Watch Ad (+10 QurłaPoints)</button>
-  </div>
-  <div id="shop">
-    <h2>Qurła Shop</h2>
-    <button onclick="buyUpgrade('dmg')">+1 DMG (Cost: <span id="dmgCost">10</span>)</button>
-    <button onclick="buyUpgrade('energyLimit')">+Max Energy (Cost: <span id="energyCost">10</span>)</button>
-    <button onclick="buyUpgrade('regen')">+Energy Regen Rate (Cost: <span id="regenCost">10</span>)</button>
-  </div>
-  <div id="inventory"></div>
-  <div id="messages"></div>
+  <script src="main.js"></script>
+</body>
+</html>
 
   <script src="main.js"></script>
 </body>
