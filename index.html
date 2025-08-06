@@ -192,28 +192,32 @@
       }
     }
 
-    function updateInventory() {
-      const inv = document.getElementById("inventory");
-      inv.innerHTML = "";
-      for (let i = 0; i < inventorySize; i++) {
-        const slot = document.createElement("div");
-        slot.className = "slot";
-        if (inventory[i]) {
-          const img = document.createElement("img");
-          img.src = inventory[i].img;
-          const tooltip = document.createElement("div");
-          tooltip.className = "tooltip";
-          tooltip.innerText = `${inventory[i].name} - ${inventory[i].desc}`;
-          slot.appendChild(img);
-          slot.appendChild(tooltip);
-        }
-        inv.appendChild(slot);
-      }
+   function updateInventory() {
+  const inv = document.getElementById("inventory");
+  inv.innerHTML = "";
+  for (let i = 0; i < inventorySize; i++) {
+    const slot = document.createElement("div");
+    slot.className = "slot";
+    if (inventory[i]) {
+      const img = document.createElement("img");
+      img.src = inventory[i].img;
+      img.alt = inventory[i].name;
+
+      const tooltip = document.createElement("div");
+      tooltip.className = "tooltip";
+      tooltip.innerText = `${inventory[i].name} - ${inventory[i].desc}`;
+
+      slot.appendChild(img);
+      slot.appendChild(tooltip);
     }
+    inv.appendChild(slot);
+  }
+}
+
 
     function openShop() {
-      document.getElementById("shop").style.display = "block";
-    }
+  document.getElementById("shop").style.display = "block";
+}
 
     function buyUpgrade(type) {
       if (type === 'dmg' && points >= dmgCost) {
