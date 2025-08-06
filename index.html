@@ -8,103 +8,124 @@
     body {
       margin: 0;
       font-family: Arial, sans-serif;
-      background: linear-gradient(to bottom, #f90, #fc0);
-      color: #222;
       text-align: center;
+      background: linear-gradient(to bottom, #ffa500, #ffcc00);
+      color: #333;
     }
     h1 {
-      margin-top: 30px;
+      margin-top: 20px;
+      font-size: 2em;
     }
     .coin {
-      width: 160px;
-      height: 160px;
-      margin: 20px auto;
+      width: 200px;
+      height: 200px;
       cursor: pointer;
-      transition: transform 0.1s ease;
-      display: block;
+      margin: 20px auto;
+      transition: transform 0.1s;
     }
     .coin:active {
       transform: scale(0.95);
     }
-    .points {
-      font-size: 32px;
-      margin: 10px 0;
-      font-weight: bold;
+    .counter {
+      font-size: 2em;
+      margin: 10px;
     }
-    .referral {
-      margin: 10px 0;
-      font-size: 14px;
-    }
-    input[type="text"] {
-      width: 300px;
-      padding: 5px;
-      text-align: center;
+    .buttons {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 20px;
     }
     button {
       padding: 10px 20px;
-      margin: 8px;
-      font-size: 16px;
-      border: none;
-      border-radius: 8px;
-      background-color: white;
+      font-size: 1em;
       cursor: pointer;
-      transition: background-color 0.2s;
+      border: none;
+      border-radius: 5px;
+      background: #fff;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+      transition: background 0.2s;
     }
     button:hover {
-      background-color: #eee;
+      background: #eee;
     }
-    footer {
-      margin: 20px 0;
-      font-size: 12px;
+    .footer {
+      margin: 20px;
+      font-size: 0.9em;
+      color: #555;
+    }
+    .referral {
+      margin: 10px auto;
+      width: 300px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    input {
+      width: 100%;
+      padding: 5px;
+      margin-bottom: 5px;
+      font-size: 1em;
     }
   </style>
 </head>
 <body>
   <h1>QurlaCoin</h1>
-  <img src="qurlacoin-clicker-gold-coin.png" alt="QurlaCoin" class="coin" id="coin" />
-  <div class="points" id="points">0</div>
-
+  <img src="qurlacoin-clicker-gold-coin.png" alt="QurlaCoin" class="coin" id="coin"/>
+  <div class="counter" id="counter">0</div>
   <div class="referral">
-    Referral link:<br/>
-    <input type="text" id="referral" value="https://qurlaav.github.io/qurlacoin-clicker" readonly />
-    <br/>
+    <label>Referral link:</label>
+    <input type="text" value="https://qurlaav.github.io/qurlacoin-clicker" id="referralLink" readonly />
     <button onclick="copyReferral()">Copy</button>
   </div>
-
-  <div>
-    <button onclick="window.open('https://t.me/qurla', '_blank')">Join Telegram</button>
-    <button onclick="window.open('https://twitter.com/qurlaofficial', '_blank')">Follow on X</button>
+  <div class="buttons">
+    <button onclick="joinTelegram()">Join Telegram</button>
+    <button onclick="followX()">Follow on X</button>
+    <button onclick="dailyBonus()">Daily Bonus</button>
+    <button onclick="inviteFriends()">Invite Friends</button>
+    <button onclick="watchAd()">Watch Ad</button>
+    <button onclick="openShop()">Shop</button>
   </div>
-  <div>
-    <button>Daily Bonus</button>
-    <button>Invite Friends</button>
-  </div>
-  <div>
-    <button>Watch Ad</button>
-    <button>Shop</button>
-  </div>
-
-  <footer>
+  <div class="footer">
     QurlaCoin © 2025
-  </footer>
-
+  </div>
   <script>
-    let points = 0;
-    const pointsEl = document.getElementById('points');
-    const coin = document.getElementById('coin');
-
-    coin.addEventListener('click', () => {
-      points++;
-      pointsEl.textContent = points;
+    let count = 0;
+    const counter = document.getElementById('counter');
+    document.getElementById('coin').addEventListener('click', () => {
+      count++;
+      counter.textContent = count;
     });
-
     function copyReferral() {
-      const copyText = document.getElementById("referral");
-      copyText.select();
-      copyText.setSelectionRange(0, 99999);
-      document.execCommand("copy");
-      alert("Referral link copied!");
+      const link = document.getElementById('referralLink');
+      link.select();
+      document.execCommand('copy');
+      alert('Referral link copied!');
+    }
+    function joinTelegram() {
+      window.open('https://t.me/yourchannel', '_blank');
+    }
+    function followX() {
+      window.open('https://x.com/yourprofile', '_blank');
+    }
+    function dailyBonus() {
+      count += 10;
+      counter.textContent = count;
+      alert('You received 10 QurlaPoints!');
+    }
+    function inviteFriends() {
+      alert('Invite your friends using your referral link!');
+    }
+    function watchAd() {
+      count += 5;
+      counter.textContent = count;
+      alert('Thanks for watching an ad! You earned 5 QurlaPoints!');
+    }
+    function openShop() {
+      alert('Shop coming soon!');
     }
   </script>
 </body>
 </html>
+
