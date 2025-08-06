@@ -1,130 +1,255 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>QurlaCoin Clicker</title>
-  <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      text-align: center;
-      background: linear-gradient(to bottom, #ffa500, #ffcc00);
-      color: #333;
-    }
-    h1 {
-      margin-top: 20px;
-      font-size: 2em;
-    }
-    .coin {
-      width: 200px;
-      height: 200px;
-      cursor: pointer;
-      margin: 20px auto;
-      transition: transform 0.1s;
-    }
-    .coin:active {
-      transform: scale(0.95);
-    }
-    .counter {
-      font-size: 2em;
-      margin: 10px;
-    }
-    .buttons {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 10px;
-      margin-top: 20px;
-    }
-    button {
-      padding: 10px 20px;
-      font-size: 1em;
-      cursor: pointer;
-      border: none;
-      border-radius: 5px;
-      background: #fff;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-      transition: background 0.2s;
-    }
-    button:hover {
-      background: #eee;
-    }
-    .footer {
-      margin: 20px;
-      font-size: 0.9em;
-      color: #555;
-    }
-    .referral {
-      margin: 10px auto;
-      width: 300px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-    input {
-      width: 100%;
-      padding: 5px;
-      margin-bottom: 5px;
-      font-size: 1em;
-    }
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>QurlaCoin Clicker</title>
+<style>
+  body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    text-align: center;
+    background: linear-gradient(to bottom, #ffa500, #ffcc00);
+    color: #333;
+  }
+  h1 {
+    margin-top: 20px;
+    font-size: 2em;
+  }
+  .coin {
+    cursor: pointer;
+    margin: 20px auto;
+    transition: transform 0.1s, width 0.3s, height 0.3s;
+    display: block;
+  }
+  .coin:active {
+    transform: scale(0.95);
+  }
+  .broken {
+    animation: shake 0.5s;
+  }
+  @keyframes shake {
+    0% { transform: translate(0, 0) rotate(0); }
+    25% { transform: translate(2px, -2px) rotate(-2deg); }
+    50% { transform: translate(-2px, 2px) rotate(2deg); }
+    75% { transform: translate(2px, -2px) rotate(-2deg); }
+    100% { transform: translate(0, 0) rotate(0); }
+  }
+  .counter, .hp, .energy, .clicks, .ranking {
+    font-size: 1.2em;
+    margin: 5px;
+  }
+  .buttons {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 20px;
+  }
+  button {
+    padding: 10px 20px;
+    font-size: 1em;
+    cursor: pointer;
+    border: none;
+    border-radius: 5px;
+    background: #fff;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    transition: background 0.2s;
+  }
+  button:hover {
+    background: #eee;
+  }
+  .footer {
+    margin: 20px;
+    font-size: 0.9em;
+    color: #555;
+  }
+  .referral {
+    margin: 10px auto;
+    width: 300px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  input {
+    width: 100%;
+    padding: 5px;
+    margin-bottom: 5px;
+    font-size: 1em;
+  }
+  .hp-bar {
+    width: 200px;
+    height: 20px;
+    border: 1px solid #333;
+    margin: 0 auto;
+    background: #eee;
+    position: relative;
+  }
+  .hp-fill {
+    height: 100%;
+    background: green;
+    width: 100%;
+    transition: width 0.3s;
+  }
+</style>
 </head>
 <body>
-  <h1>QurlaCoin</h1>
-  <img src="qurlacoin-clicker-gold-coin.png" alt="QurlaCoin" class="coin" id="coin"/>
-  <div class="counter" id="counter">0</div>
-  <div class="referral">
-    <label>Referral link:</label>
-    <input type="text" value="https://qurlaav.github.io/qurlacoin-clicker" id="referralLink" readonly />
-    <button onclick="copyReferral()">Copy</button>
-  </div>
-  <div class="buttons">
-    <button onclick="joinTelegram()">Join Telegram</button>
-    <button onclick="followX()">Follow on X</button>
-    <button onclick="dailyBonus()">Daily Bonus</button>
-    <button onclick="inviteFriends()">Invite Friends</button>
-    <button onclick="watchAd()">Watch Ad</button>
-    <button onclick="openShop()">Shop</button>
-  </div>
-  <div class="footer">
-    QurlaCoin © 2025
-  </div>
-  <script>
-    let count = 0;
-    const counter = document.getElementById('counter');
-    document.getElementById('coin').addEventListener('click', () => {
-      count++;
-      counter.textContent = count;
-    });
-    function copyReferral() {
-      const link = document.getElementById('referralLink');
-      link.select();
-      document.execCommand('copy');
-      alert('Referral link copied!');
+<h1>QurlaCoin</h1>
+<img src="qurlacoin-clicker-gold-coin.png" alt="QurlaCoin" class="coin" id="coin" style="width:200px;height:200px;">
+<div class="counter" id="counter">QurlaPoints: 0</div>
+<div class="clicks" id="clicks">Total Clicks: 0</div>
+<div class="energy" id="energy">Energy: 20/20</div>
+<div class="hp">HP: <span id="hpValue">100</span>/<span id="hpMax">100</span></div>
+<div class="hp-bar">
+  <div class="hp-fill" id="hpFill"></div>
+</div>
+<div class="referral">
+  <label>Referral link:</label>
+  <input type="text" value="https://qurlaav.github.io/qurlacoin-clicker" id="referralLink" readonly />
+  <button onclick="copyReferral()">Copy</button>
+</div>
+<div class="buttons">
+  <button onclick="joinTelegram()">Join Telegram</button>
+  <button onclick="followX()">Follow on X</button>
+  <button onclick="dailyBonus()">Daily Bonus</button>
+  <button onclick="inviteFriends()">Invite Friends</button>
+  <button onclick="watchAd()">Watch Ad</button>
+  <button onclick="buyEnergy()">Buy Energy (+10)</button>
+  <button onclick="buyUpgrade()">Buy Upgrade</button>
+  <button onclick="openShop()">Shop</button>
+</div>
+<div class="ranking" id="ranking">Best QurlaPoints: 0</div>
+<div class="footer">
+  QurlaCoin © 2025
+</div>
+<script>
+  let qurlaPoints = 0;
+  let totalClicks = 0;
+  let hpMax = 100;
+  let hp = hpMax;
+  let energy = 20;
+  let maxEnergy = 20;
+  let upgradeLevel = 1;
+  let coinSize = 200;
+
+  const counter = document.getElementById('counter');
+  const clicks = document.getElementById('clicks');
+  const hpValue = document.getElementById('hpValue');
+  const hpMaxElem = document.getElementById('hpMax');
+  const hpFill = document.getElementById('hpFill');
+  const energyDisplay = document.getElementById('energy');
+  const ranking = document.getElementById('ranking');
+  const coin = document.getElementById('coin');
+
+  const bestScore = localStorage.getItem('bestScore') || 0;
+  ranking.textContent = `Best QurlaPoints: ${bestScore}`;
+
+  function updateDisplay() {
+    counter.textContent = `QurlaPoints: ${qurlaPoints}`;
+    clicks.textContent = `Total Clicks: ${totalClicks}`;
+    hpValue.textContent = hp;
+    hpMaxElem.textContent = hpMax;
+    hpFill.style.width = `${(hp/hpMax)*100}%`;
+    energyDisplay.textContent = `Energy: ${energy}/${maxEnergy}`;
+    if (qurlaPoints > bestScore) {
+      localStorage.setItem('bestScore', qurlaPoints);
+      ranking.textContent = `Best QurlaPoints: ${qurlaPoints}`;
     }
-    function joinTelegram() {
-      window.open('https://t.me/QURLAPOLISHPOWER', '_blank');
+  }
+
+  coin.addEventListener('click', () => {
+    if (energy > 0 && hp > 0) {
+      totalClicks++;
+      energy--;
+      hp -= upgradeLevel;
+      if (hp <= 0) {
+        hp = 0;
+        updateDisplay();
+        coin.classList.add('broken');
+        setTimeout(() => {
+          coin.classList.remove('broken');
+          hpMax += 20;
+          hp = hpMax;
+          coinSize += 1;
+          coin.style.width = coinSize + 'px';
+          coin.style.height = coinSize + 'px';
+          updateDisplay();
+        }, 500);
+      }
+      qurlaPoints++;
+      updateDisplay();
+    } else if (hp <= 0) {
+      alert('Wait for the coin to respawn!');
+    } else {
+      alert('No energy! Wait or buy more.');
     }
-    function followX() {
-      window.open('https://x.com/qurlaav', '_blank');
+  });
+
+  function copyReferral() {
+    const link = document.getElementById('referralLink');
+    link.select();
+    document.execCommand('copy');
+    alert('Referral link copied!');
+  }
+
+  function joinTelegram() {
+    window.open('https://t.me/QURLAPOLISHPOWER', '_blank');
+  }
+
+  function followX() {
+    window.open('https://x.com/qurlaav', '_blank');
+  }
+
+  function dailyBonus() {
+    qurlaPoints += 10;
+    updateDisplay();
+    alert('You received 10 QurlaPoints!');
+  }
+
+  function inviteFriends() {
+    alert('Invite your friends using your referral link!');
+  }
+
+  function watchAd() {
+    qurlaPoints += 5;
+    updateDisplay();
+    alert('Thanks for watching an ad! You earned 5 QurlaPoints!');
+  }
+
+  function buyEnergy() {
+    if (qurlaPoints >= 5) {
+      qurlaPoints -= 5;
+      energy = Math.min(energy + 10, maxEnergy);
+      updateDisplay();
+    } else {
+      alert('Not enough QurlaPoints!');
     }
-    function dailyBonus() {
-      count += 10;
-      counter.textContent = count;
-      alert('You received 10 QurlaPoints!');
+  }
+
+  function buyUpgrade() {
+    if (qurlaPoints >= 50) {
+      qurlaPoints -= 50;
+      upgradeLevel++;
+      updateDisplay();
+      alert(`Upgrade purchased! You now do -${upgradeLevel} HP per click.`);
+    } else {
+      alert('Not enough QurlaPoints!');
     }
-    function inviteFriends() {
-      alert('Invite your friends using your referral link!');
+  }
+
+  function openShop() {
+    alert('Shop coming soon!');
+  }
+
+  // Regenerate energy over time
+  setInterval(() => {
+    if (energy < maxEnergy) {
+      energy++;
+      updateDisplay();
     }
-    function watchAd() {
-      count += 5;
-      counter.textContent = count;
-      alert('Thanks for watching an ad! You earned 5 QurlaPoints!');
-    }
-    function openShop() {
-      alert('Shop coming soon!');
-    }
-  </script>
+  }, 5000);
+
+  updateDisplay();
+</script>
 </body>
 </html>
