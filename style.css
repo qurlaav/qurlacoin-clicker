@@ -1,4 +1,4 @@
-body {
+bbody {
   background: linear-gradient(#121212, #1a1a1a);
   color: #eee;
   font-family: 'Courier New', monospace;
@@ -166,27 +166,42 @@ h1 {
 
 .inventory-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
-  gap: 12px;
+  grid-template-columns: repeat(9, 48px); /* Minecraftowy styl: 9 slotów w rzędzie */
+  grid-template-rows: repeat(3, 48px); /* 3 rzędy */
+  gap: 4px;
   margin-top: 15px;
+  background: #8b8b8b; /* Szary kolor tła jak w Minecrafcie */
+  padding: 8px;
+  border: 2px solid #373737; /* Ciemna ramka */
+  border-radius: 4px;
+  box-shadow: inset 0 0 5px #000;
 }
 
 .inventory-grid div {
-  background: #333;
-  border: 1px solid #555;
-  border-radius: 6px;
-  padding: 10px;
+  background: #c6c6c6; /* Jasnoszary slot */
+  border: 2px solid #373737; /* Ciemna ramka slotu */
+  border-radius: 4px;
+  padding: 4px;
   cursor: pointer;
-  transition: transform 0.2s;
+  transition: transform 0.2s, box-shadow 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .inventory-grid div img {
-  width: 100%;
-  height: auto;
+  width: 40px;
+  height: 40px;
 }
 
 .inventory-grid div:hover {
   transform: scale(1.1);
+  box-shadow: 0 0 5px #28a745;
+}
+
+.inventory-grid div:empty {
+  background: #8b8b8b; /* Puste sloty w kolorze tła */
+  border: 2px solid #555;
 }
 
 .notification {
