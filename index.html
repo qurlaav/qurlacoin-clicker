@@ -1,253 +1,264 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>QurłaClicker</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Qurłacoin Clicker</title>
   <style>
-    * {
-      box-sizing: border-box;
+    body {
+      font-family: 'Arial', sans-serif;
+      background-color: #0d1117;
+      color: #c9d1d9;
       margin: 0;
       padding: 0;
-    }
-
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #1e1e1e;
-      color: #fff;
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: start;
-      min-height: 100vh;
-      padding: 20px;
     }
-
     h1 {
-      margin-bottom: 10px;
+      margin-top: 20px;
     }
-
     #coin {
-      width: 100px;
+      width: 150px;
       cursor: pointer;
       transition: transform 0.1s ease-in-out;
     }
-
     #coin:active {
       transform: scale(0.95);
     }
-
-    .progress {
-      width: 100%;
-      background: #333;
-      border-radius: 10px;
-      overflow: hidden;
-      margin-top: 10px;
-    }
-
-    .progress-bar {
+    #hp-bar-container {
+      width: 80%;
       height: 20px;
-      background: #ffcc00;
+      background: #555;
+      border-radius: 10px;
+      margin: 20px;
+    }
+    #hp-bar {
+      height: 100%;
+      background: limegreen;
       width: 100%;
-      transition: width 0.2s;
+      border-radius: 10px;
     }
-
-    .stats {
+    #stats {
       margin: 10px 0;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 5px;
     }
-
-    .inventory {
-      margin-top: 20px;
-      text-align: center;
-    }
-
-    .inventory-grid {
+    #inventory {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(50px, 1fr));
+      grid-template-columns: repeat(5, 70px);
       gap: 10px;
-      margin-top: 10px;
-    }
-
-    .inventory-item {
-      width: 50px;
-      height: 50px;
-    }
-
-    .buttons {
+      background: #161b22;
+      padding: 10px;
+      border-radius: 10px;
       margin-top: 20px;
+    }
+    .slot {
+      width: 64px;
+      height: 64px;
+      background-color: #2d333b;
+      border: 2px solid #444c56;
       display: flex;
-      flex-direction: column;
-      gap: 10px;
+      align-items: center;
+      justify-content: center;
+      position: relative;
     }
-
-    button {
-      padding: 10px 15px;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      background: #007bff;
+    .slot img {
+      max-width: 60px;
+      max-height: 60px;
+    }
+    .tooltip {
+      visibility: hidden;
+      background-color: black;
       color: white;
-      font-weight: bold;
+      text-align: center;
+      padding: 5px;
+      border-radius: 6px;
+      position: absolute;
+      z-index: 1;
+      bottom: 70px;
+      left: 50%;
+      transform: translateX(-50%);
+      white-space: nowrap;
     }
-
-    #message {
-      margin-top: 10px;
-      font-size: 0.9em;
-      color: #4caf50;
+    .slot:hover .tooltip {
+      visibility: visible;
+    }
+    #shop, #buttons, #messages {
+      margin: 20px;
+    }
+    button {
+      background-color: #238636;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      margin: 5px;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+    button:hover {
+      background-color: #2ea043;
     }
   </style>
 </head>
-
 <body>
-  <h1>QurłaClicker</h1>
-  <div class="stats">
-    <div>QurłaPoints: <span id="points">0</span></div>
-    <div>Energy: <span id="energy">10</span>/<span id="maxEnergy">10</span></div>
-    <div>EXP: <span id="exp">0</span></div>
-    <div>Level: <span id="level">1</span></div>
+  <h1>Qurłacoin Clicker</h1>
+  <div id="hp-bar-container">
+    <div id="hp-bar"></div>
   </div>
-
-  <img src="qurlacoin-clicker-gold-coin.png" id="coin">
-
-  <div class="progress">
-    <div class="progress-bar" id="hpBar"></div>
+  <img id="coin" src="qurlacoin-clicker-gold-coin.png" onclick="clickCoin()" alt="Qurłacoin">
+  <div id="stats">
+    <p>QurłaPoints: <span id="points">0</span></p>
+    <p>Energy: <span id="energy">10</span>/<span id="maxEnergy">10</span></p>
+    <p>DMG: <span id="dmg">1</span></p>
+    <p>EXP: <span id="exp">0</span> | Level: <span id="level">1</span></p>
   </div>
-
-  <div class="buttons">
+  <div id="buttons">
     <button onclick="openShop()">Open Shop</button>
     <button onclick="watchAd()">Watch Ad (+10 QurłaPoints)</button>
   </div>
-
-  <div class="inventory">
-    <h3>Inventory (<span id="inventory-count">0</span>/10)</h3>
-    <div class="inventory-grid" id="inventory"></div>
+  <div id="shop" style="display:none">
+    <button onclick="buyUpgrade('dmg')">Upgrade DMG (Cost: <span id="dmgCost">10</span>)</button>
+    <button onclick="buyUpgrade('energyLimit')">Increase Max Energy (Cost: <span id="energyCost">10</span>)</button>
+    <button onclick="buyUpgrade('regen')">Increase Energy Regen (Cost: <span id="regenCost">10</span>)</button>
   </div>
-
-  <div id="message"></div>
+  <div id="messages"></div>
+  <div id="inventory"></div>
 
   <script>
     let points = 0;
     let energy = 10;
     let maxEnergy = 10;
-    let energyRegenRate = 5000;
-    let coinHP = 100;
-    let maxHP = 100;
-    let damage = 1;
+    let dmg = 1;
     let exp = 0;
     let level = 1;
+    let regen = 5;
+    let hp = 100;
+    let maxHp = 100;
+    let dmgCost = 10, energyCost = 10, regenCost = 10;
     let inventory = [];
-    let inventoryLimit = 10;
-    let coinSize = 100;
-    let items = [
-      { name: 'Energy Potion', img: 'items/energy.png' },
-      { name: 'Attack Potion', img: 'items/attack.png' },
-      { name: 'Passat B2 NFT Shard', img: 'items/b2.png' },
-      { name: 'Passat B3 NFT Shard', img: 'items/b3.png' },
-      { name: 'Passat B4 NFT Shard', img: 'items/b4.png' },
-      { name: 'Passat B5 NFT Shard', img: 'items/b5.png' },
-      { name: 'Żulikowy Beret', img: 'items/beret.png' },
-      { name: 'Paragon z Biedronki', img: 'items/paragon.png' },
-      { name: 'JinLing', img: 'items/jinling.png' },
-      { name: 'Skarpetki w sandałach', img: 'items/skarpety.png' }
+    const inventorySize = 20;
+
+    const items = [
+      { name: "Energy Potion", img: "items/energy.png", desc: "+10 energy instantly" },
+      { name: "Attack Potion", img: "items/attack.png", desc: "+2 DMG for 30s" },
+      { name: "Passat B2 NFT Shard", img: "items/b2.png", desc: "Collect 5 to mint B2 NFT" },
+      { name: "Passat B3 NFT Shard", img: "items/b3.png", desc: "Collect 5 to mint B3 NFT" },
+      { name: "Passat B4 NFT Shard", img: "items/b4.png", desc: "Collect 5 to mint B4 NFT" },
+      { name: "Passat B5 NFT Shard", img: "items/b5.png", desc: "Collect 5 to mint B5 NFT" },
+      { name: "Żulikowy Beret", img: "items/beret.png", desc: "Stylowy dodatek" },
+      { name: "Paragon z Biedronki", img: "items/paragon.png", desc: "Dowód honoru" },
+      { name: "JinLing", img: "items/jinling.png", desc: "Typowy zapas z bazaru" },
+      { name: "Skarpetki w sandałach", img: "items/skarpety.png", desc: "Janusz Style" },
     ];
 
-    const coin = document.getElementById('coin');
-    const hpBar = document.getElementById('hpBar');
-    const message = document.getElementById('message');
-
-    coin.addEventListener('click', () => {
+    function clickCoin() {
       if (energy <= 0) return;
-
       energy--;
-      coinHP -= damage;
-      updateStats();
-
-      if (coinHP <= 0) {
-        points += 10;
+      hp -= dmg;
+      document.getElementById("energy").innerText = energy;
+      updateHP();
+      if (hp <= 0) {
+        maxHp += 20;
+        hp = maxHp;
         exp += 10;
-        coinSize++;
-        levelUp();
-        checkDrop();
-        maxHP += 20;
-        coinHP = maxHP;
-        coin.style.width = `${coinSize}px`;
+        points += 5;
+        checkLevelUp();
+        maybeDropItem();
       }
-    });
-
-    function updateStats() {
-      document.getElementById('points').textContent = points;
-      document.getElementById('energy').textContent = energy;
-      document.getElementById('maxEnergy').textContent = maxEnergy;
-      document.getElementById('exp').textContent = exp;
-      document.getElementById('level').textContent = level;
-      document.getElementById('inventory-count').textContent = inventory.length;
-      hpBar.style.width = `${(coinHP / maxHP) * 100}%`;
+      document.getElementById("points").innerText = points;
+      document.getElementById("exp").innerText = exp;
     }
 
-    function regenEnergy() {
-      if (energy < maxEnergy) {
-        energy++;
-        updateStats();
+    function updateHP() {
+      const bar = document.getElementById("hp-bar");
+      bar.style.width = `${(hp / maxHp) * 100}%`;
+    }
+
+    function checkLevelUp() {
+      const required = level * 50;
+      if (exp >= required) {
+        level++;
+        exp = 0;
+        document.getElementById("level").innerText = level;
+        showMessage("Level Up!");
       }
     }
-    setInterval(regenEnergy, energyRegenRate);
 
-    function watchAd() {
-      points += 10;
-      showMessage("Thanks for watching! +10 QurłaPoints");
-      updateStats();
+    function maybeDropItem() {
+      if (Math.random() < 0.4 && inventory.length < inventorySize) {
+        const item = items[Math.floor(Math.random() * items.length)];
+        inventory.push(item);
+        updateInventory();
+        showMessage(`You received: ${item.name}`);
+      }
+    }
+
+    function updateInventory() {
+      const inv = document.getElementById("inventory");
+      inv.innerHTML = "";
+      for (let i = 0; i < inventorySize; i++) {
+        const slot = document.createElement("div");
+        slot.className = "slot";
+        if (inventory[i]) {
+          const img = document.createElement("img");
+          img.src = inventory[i].img;
+          const tooltip = document.createElement("div");
+          tooltip.className = "tooltip";
+          tooltip.innerText = `${inventory[i].name} - ${inventory[i].desc}`;
+          slot.appendChild(img);
+          slot.appendChild(tooltip);
+        }
+        inv.appendChild(slot);
+      }
     }
 
     function openShop() {
-      const upgrade = prompt("Shop:\n1. +1 DMG (10 pts)\n2. +1 Energy Limit (15 pts)\n3. +1 Regen Speed (20 pts)\n4. +1 Inventory Slot (25 pts)");
-      switch (upgrade) {
-        case '1': if (points >= 10) { points -= 10; damage++; showMessage("+1 DMG"); } break;
-        case '2': if (points >= 15) { points -= 15; maxEnergy++; showMessage("+1 Max Energy"); } break;
-        case '3': if (points >= 20) { points -= 20; energyRegenRate = Math.max(1000, energyRegenRate - 500); showMessage("Energy regenerates faster!"); clearInterval(); setInterval(regenEnergy, energyRegenRate); } break;
-        case '4': if (points >= 25) { points -= 25; inventoryLimit++; showMessage("+1 Inventory Slot"); } break;
+      document.getElementById("shop").style.display = "block";
+    }
+
+    function buyUpgrade(type) {
+      if (type === 'dmg' && points >= dmgCost) {
+        points -= dmgCost;
+        dmg = Math.round(dmg * 1.5);
+        dmgCost *= 2;
+        document.getElementById("dmg").innerText = dmg;
+        document.getElementById("dmgCost").innerText = dmgCost;
+      } else if (type === 'energyLimit' && points >= energyCost) {
+        points -= energyCost;
+        maxEnergy = Math.round(maxEnergy * 1.5);
+        energy = maxEnergy;
+        energyCost *= 2;
+        document.getElementById("maxEnergy").innerText = maxEnergy;
+        document.getElementById("energy").innerText = energy;
+        document.getElementById("energyCost").innerText = energyCost;
+      } else if (type === 'regen' && points >= regenCost) {
+        points -= regenCost;
+        regen = Math.max(1, regen - 1);
+        regenCost *= 2;
+        document.getElementById("regenCost").innerText = regenCost;
       }
-      updateStats();
+      document.getElementById("points").innerText = points;
     }
 
-    function checkDrop() {
-      if (Math.random() < 0.4 && inventory.length < inventoryLimit) {
-        const item = items[Math.floor(Math.random() * items.length)];
-        inventory.push(item);
-        addItemToInventory(item);
-        showMessage(`You found: ${item.name}!`);
+    function watchAd() {
+      points += 10;
+      document.getElementById("points").innerText = points;
+      showMessage("+10 QurłaPoints!");
+    }
+
+    function showMessage(msg) {
+      const div = document.getElementById("messages");
+      const p = document.createElement("p");
+      p.innerText = msg;
+      div.appendChild(p);
+      setTimeout(() => div.removeChild(p), 3000);
+    }
+
+    setInterval(() => {
+      if (energy < maxEnergy) {
+        energy++;
+        document.getElementById("energy").innerText = energy;
       }
-    }
-
-    function addItemToInventory(item) {
-      const inv = document.getElementById('inventory');
-      const img = document.createElement('img');
-      img.src = item.img;
-      img.alt = item.name;
-      img.title = item.name;
-      img.className = 'inventory-item';
-      inv.appendChild(img);
-    }
-
-    function levelUp() {
-      if (exp >= level * 100) {
-        level++;
-        exp = 0;
-        showMessage("Level up!");
-      }
-    }
-
-    function showMessage(text) {
-      message.textContent = text;
-      setTimeout(() => message.textContent = '', 3000);
-    }
-
-    updateStats();
+    }, regen * 1000);
   </script>
 </body>
-
 </html>
