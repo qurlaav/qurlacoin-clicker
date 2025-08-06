@@ -48,6 +48,7 @@ const elements = {
   buyDropRate: document.getElementById('buyDropRate') || null,
   buyCoinSkin: document.getElementById('buyCoinSkin') || null,
   prestigeBtn: document.getElementById('prestigeBtn') || null,
+  missionsBtn: document.getElementById('missionsBtn') || null,
   clickSound: document.getElementById('clickSound') || null,
   levelUpSound: document.getElementById('levelUpSound') || null,
   buySound: document.getElementById('buySound') || null,
@@ -144,7 +145,9 @@ function gainExp(amount) {
     state.exp = 0;
     state.level++;
     state.dmg += 1 + state.prestigeLevel;
-    if (elements.levelUpSound) elements.levelUpSound.play();
+    if (elements.levelUpSound) {
+      try { elements.levelUpSound.play(); } catch (e) { console.log('Audio error:', e); }
+    }
     showNotification(`Level Up! DMG increased to ${state.dmg}!`);
     if (elements.missionList) checkMissions();
   }
@@ -183,13 +186,17 @@ elements.coin.addEventListener('click', () => {
     state.coinHP -= effectiveDmg;
     state.energy--;
     state.clicks++;
-    if (elements.clickSound) elements.clickSound.play();
+    if (elements.clickSound) {
+      try { elements.clickSound.play(); } catch (e) { console.log('Audio error:', e); }
+    }
     elements.coin.style.transform = 'scale(0.9)';
     setTimeout(() => (elements.coin.style.transform = 'scale(1)'), 100);
     if (state.coinHP <= 0) {
       state.points += state.maxCoinHP;
       state.coinCount++;
-      if (elements.coinDefeatSound) elements.coinDefeatSound.play();
+      if (elements.coinDefeatSound) {
+        try { elements.coinDefeatSound.play(); } catch (e) { console.log('Audio error:', e); }
+      }
       elements.coin.classList.add('defeated');
       showNotification(`QurlaCoin defeated! +${state.maxCoinHP} QurłaPoints`);
       dropItem();
@@ -220,7 +227,9 @@ if (elements.buyAutoHit) {
       if (state.coinHP <= 0) {
         state.points += state.maxCoinHP;
         state.coinCount++;
-        if (elements.coinDefeatSound) elements.coinDefeatSound.play();
+        if (elements.coinDefeatSound) {
+          try { elements.coinDefeatSound.play(); } catch (e) { console.log('Audio error:', e); }
+        }
         elements.coin.classList.add('defeated');
         showNotification(`QurlaCoin defeated! +${state.maxCoinHP} QurłaPoints`);
         dropItem();
@@ -245,7 +254,9 @@ elements.adBtn.addEventListener('click', () => {
     adCooldown = true;
     elements.adBtn.disabled = true;
     elements.adBtn.style.opacity = 0.5;
-    if (elements.buySound) elements.buySound.play();
+    if (elements.buySound) {
+      try { elements.buySound.play(); } catch (e) { console.log('Audio error:', e); }
+    }
     showNotification('+10 QurłaPoints!');
     updateUI();
     setTimeout(() => {
@@ -278,7 +289,9 @@ elements.buyDmg.addEventListener('click', () => {
     state.points -= cost;
     state.dmg++;
     addItem({ id: 'dmg', icon: 'img/b2.png', name: 'Qurla Sword', effect: 'dmg', value: 1.5 });
-    if (elements.buySound) elements.buySound.play();
+    if (elements.buySound) {
+      try { elements.buySound.play(); } catch (e) { console.log('Audio error:', e); }
+    }
     showNotification('Bought +1 DMG!');
     if (elements.missionList) checkMissions();
     updateUI();
@@ -292,7 +305,9 @@ elements.buyEnergy.addEventListener('click', () => {
     state.maxEnergy += 5;
     state.energy = state.maxEnergy;
     addItem({ id: 'energy', icon: 'img/b3.png', name: 'Energy Crystal', effect: 'energy', value: 10 });
-    if (elements.buySound) elements.buySound.play();
+    if (elements.buySound) {
+      try { elements.buySound.play(); } catch (e) { console.log('Audio error:', e); }
+    }
     showNotification('Bought +5 Max Energy!');
     if (elements.missionList) checkMissions();
     updateUI();
@@ -305,7 +320,9 @@ elements.buyRegen.addEventListener('click', () => {
     state.points -= cost;
     state.regenRate++;
     addItem({ id: 'regen', icon: 'img/b4.png', name: 'Regen Potion', effect: 'regen', value: 2 });
-    if (elements.buySound) elements.buySound.play();
+    if (elements.buySound) {
+      try { elements.buySound.play(); } catch (e) { console.log('Audio error:', e); }
+    }
     showNotification('Bought +1 Energy Regen!');
     if (elements.missionList) checkMissions();
     updateUI();
@@ -319,7 +336,9 @@ if (elements.buyAutoHit) {
       state.points -= cost;
       state.autoHit++;
       addItem({ id: 'autohit', icon: 'img/b5.png', name: 'Auto-Hit Core', effect: 'autohit', value: 1 });
-      if (elements.buySound) elements.buySound.play();
+      if (elements.buySound) {
+        try { elements.buySound.play(); } catch (e) { console.log('Audio error:', e); }
+      }
       showNotification('Bought +1 Auto-Hit!');
       if (elements.missionList) checkMissions();
       updateUI();
@@ -334,7 +353,9 @@ if (elements.buyDropRate) {
       state.points -= cost;
       state.dropRate += 0.01;
       addItem({ id: 'droprate', icon: 'img/paragon.png', name: 'Drop Enhancer', effect: 'droprate', value: 0.01 });
-      if (elements.buySound) elements.buySound.play();
+      if (elements.buySound) {
+        try { elements.buySound.play(); } catch (e) { console.log('Audio error:', e); }
+      }
       showNotification('Bought +1% Drop Rate!');
       if (elements.missionList) checkMissions();
       updateUI();
@@ -356,7 +377,9 @@ if (elements.buyCoinSkin) {
         'img/beret.png'
       ];
       state.coinSkin = skins[Math.floor(Math.random() * skins.length)];
-      if (elements.buySound) elements.buySound.play();
+      if (elements.buySound) {
+        try { elements.buySound.play(); } catch (e) { console.log('Audio error:', e); }
+      }
       showNotification('Bought new coin skin!');
       updateUI();
     }
@@ -384,7 +407,9 @@ if (elements.prestigeBtn) {
       state.inventory = [];
       state.prestigeLevel++;
       elements.inventoryGrid.innerHTML = '';
-      if (elements.buySound) elements.buySound.play();
+      if (elements.buySound) {
+        try { elements.buySound.play(); } catch (e) { console.log('Audio error:', e); }
+      }
       showNotification(`Prestige! Gained ${Math.floor(state.level / 10)} QurlaGems!`);
       updateUI();
     }
@@ -474,7 +499,9 @@ function updateMissions() {
         missionEl.addEventListener('click', () => {
           state[mission.type] += mission.reward;
           state.missions = state.missions.filter(m => m !== mission);
-          if (elements.buySound) elements.buySound.play();
+          if (elements.buySound) {
+            try { elements.buySound.play(); } catch (e) { console.log('Audio error:', e); }
+          }
           showNotification(`Mission completed! +${mission.reward} ${mission.type}!`);
           updateUI();
           generateMissions();
@@ -515,7 +542,9 @@ function startMinigame() {
       coin.addEventListener('click', () => {
         coinsCaught++;
         state.points += 10;
-        if (elements.clickSound) elements.clickSound.play();
+        if (elements.clickSound) {
+          try { elements.clickSound.play(); } catch (e) { console.log('Audio error:', e); }
+        }
         showNotification('+10 QurłaPoints!');
         coin.remove();
         updateUI();
@@ -554,6 +583,7 @@ function calculateOfflineProgress() {
 }
 
 // Inicjalizacja
+state.energy = state.maxEnergy; // Reset energii na start
 calculateOfflineProgress();
 loadInventory();
 if (elements.missionList) generateMissions();
