@@ -8,87 +8,103 @@
     body {
       margin: 0;
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: radial-gradient(circle, #ffcc00, #ff9900);
+      background: linear-gradient(180deg, #ff9900 0%, #ffcc00 100%);
       display: flex;
       flex-direction: column;
       align-items: center;
       min-height: 100vh;
       color: #222;
     }
-    .header {
-      margin-top: 20px;
-      font-size: 1.8em;
-      font-weight: bold;
+
+    .container {
+      width: 100%;
+      max-width: 400px;
+      padding: 20px;
+      box-sizing: border-box;
       text-align: center;
     }
-    .coin-container {
-      margin: 30px 0;
-      position: relative;
+
+    .header {
+      font-size: 2em;
+      font-weight: bold;
+      margin-top: 10px;
+      margin-bottom: 20px;
     }
+
     .coin {
-      width: 150px;
-      height: 150px;
-      background: url('https://pbs.twimg.com/profile_images/1947189329786281984/dfkIBBZt_400x400.jpg') no-repeat center/contain;
+      width: 160px;
+      height: 160px;
+      background: url('https://upload.wikimedia.org/wikipedia/commons/thumb/e/e3/Gold_coin_icon.png/600px-Gold_coin_icon.png') no-repeat center/contain;
+      margin: 20px auto;
       cursor: pointer;
       transition: transform 0.1s ease;
     }
+
     .coin:active {
       transform: scale(0.9);
     }
+
     .points {
-      font-size: 2em;
-      margin: 10px 0;
+      font-size: 2.4em;
+      font-weight: bold;
+      margin: 10px 0 20px;
     }
-    .buttons {
-      display: flex;
-      flex-wrap: wrap;
+
+    .referral {
+      margin: 15px 0;
+      font-size: 0.9em;
+      word-break: break-all;
+    }
+
+    .buttons-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
       gap: 10px;
-      justify-content: center;
+      margin: 20px 0;
     }
+
     .button {
       background: white;
       border: none;
-      border-radius: 8px;
-      padding: 10px 16px;
+      border-radius: 10px;
+      padding: 12px;
       font-size: 0.95em;
       cursor: pointer;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+      box-shadow: 0 2px 4px rgba(0,0,0,0.2);
       transition: background 0.2s ease;
     }
+
     .button:hover {
       background: #eee;
     }
+
     .footer {
-      margin-top: auto;
-      padding: 20px;
       font-size: 0.85em;
-      text-align: center;
+      margin-top: auto;
+      padding: 15px;
     }
   </style>
 </head>
 <body>
-  <div class="header">QurlaCoin Clicker</div>
-
-  <div class="coin-container">
+  <div class="container">
+    <div class="header">QurlaCoin</div>
     <div class="coin" id="coin"></div>
+    <div class="points"><span id="points">0</span></div>
+    <div class="referral">
+      Referral link:<br>
+      <input type="text" id="refLink" value="https://qurlaav.github.io/qurlacoin-clicker" readonly style="width: 100%; margin-top: 5px;">
+      <button class="button" onclick="copyRef()">Copy</button>
+    </div>
+    <div class="buttons-grid">
+      <button class="button">Join Telegram</button>
+      <button class="button">Follow on X</button>
+      <button class="button">Daily Bonus</button>
+      <button class="button">Invite Friends</button>
+      <button class="button">Watch Ad</button>
+      <button class="button">Shop</button>
+    </div>
   </div>
-
-  <div class="points">Points: <span id="points">0</span></div>
-
-  <div class="buttons">
-    <button class="button">Join Telegram</button>
-    <button class="button">Follow on X</button>
-    <button class="button">Daily Bonus</button>
-    <button class="button">Invite Friends</button>
-    <button class="button">Watch Ad</button>
-  </div>
-
-  <div class="footer">
-    Your referral link: <br>
-    <input type="text" id="refLink" value="https://yourgame.com/?ref=YOURID" readonly style="width:80%">
-    <button class="button" onclick="copyRef()">Copy</button>
-  </div>
-
+  <div class="footer">QurlaCoin © 2025</div>
   <script>
     let points = 0;
     const pointsSpan = document.getElementById("points");
@@ -107,3 +123,4 @@
   </script>
 </body>
 </html>
+
