@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Click Qurlacoin to earn points! Join channels, follow social media and invite friends to earn more!">
+  <title>Qurlacoin Clicker</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+</head>
+<body>
+  <div id="app">
+    <h1>Qurlacoin Clicker</h1>
+
+    <div id="coin-wrapper">
+      <img id="coin" src="https://upload.wikimedia.org/wikipedia/commons/4/43/Gold_coin_icon.png" alt="Qurlacoin">
+    </div>
+
+    <p id="points">Points: 0</p>
+
+    <div id="referral">
+      <p>Your referral link:</p>
+      <input id="ref-link" readonly>
+      <button onclick="copyReferral()">Copy</button>
+    </div>
+
+    <h2>Earn more Qurłapoints:</h2>
+    <div class="tasks">
+      <button onclick="completeTask('followX')">Follow us on X</button>
+      <button onclick="completeTask('joinTG')">Join our Telegram</button>
+      <button onclick="completeTask('likePost')">Like our Post</button>
+      <button onclick="completeTask('commentPost')">Comment on our Post</button>
+      <button onclick="completeTask('invite')">Invite a Friend</button>
+      <button onclick="completeTask('daily')">Daily Login Bonus</button>
+      <button onclick="completeTask('watchAd')">Watch a Short Ad</button>
+    </div>
+
+    <div id="upgrades">
+      <h2>Upgrades</h2>
+      <button onclick="buyUpgrade('clickPower')">Increase Click Power (Cost: 100)</button>
+      <button onclick="buyUpgrade('autoClicker')">Buy Auto Clicker (Cost: 500)</button>
+    </div>
+  </div>
+
+  <script>
+    let points = 0;
+    let clickPower = 1;
+    let refCode = '';
+    let autoClickers = 0;
+
+    const params = new URLSearchParams(window.location.search);
+    const tgUser = window.Telegram.WebApp.initDataUnsafe.user || { id: 'guest' };
+    const userId = tgUser.id;
+
+    if (params.has('startparam')) {
+      refCode = params.get('startparam');
+    }
+
+    const coin = document.getElementById('coin');
+    const pointsDisplay = document.getElementById('points');
+    const refInput = document.getElementById('ref-link');
+
+    function updatePoints() {
+      pointsDisplay.textContent = `Points: ${points}`;
+    }
+
+    function copyReferral() {
+      navigator.clipboard.writeText(refInput.value);
+      alert("Referral link copied!");
+    }
+
+    function rewardPoints(amount, reason) {
+      points += amount;
+      alert(`You earned ${amount} Qurłapoints for ${reason}!`);
+      updatePoints();
+    }
+
+    coin.addEventListener('click', () => {
+      points += clickPower;
+      updatePoints();
+    });
+
+    function buyUpgrade(type) {
+      if (type === 'clickPower' && points >= 100) {
+        points -= 100;
+        clickPower++;
+        alert('Click Power increased!');
+      } else if (type === 'autoClicker' && points >= 500) {
+        points -= 500;
+        autoClickers++;
+        alert('Auto Clicker added!');
+      } else {
+        alert('Not enough points!');
+        return;
+      }
+      updatePoints();
+    }
+
+    function completeTask(task) {
+      switch (task) {
+        case 'followX': rewardPoints(50, 'following on X'); break;
+        case 'joinTG': rewardPoints(40, 'joining Telegram'); break;
+        case 'likePost': rewardPoints(30, 'liking a post'); break;
+        case 'commentPost': rewardPoints(30, 'commenting'); break;
+        case 'invite': rewardPoints(100, 'inviting a friend'); break;
+        case 'daily': rewardPoints(25, 'daily bonus'); break;
+        case 'watchAd': rewardPoints(20, 'watching an ad'); break;
+      }
+    }
+
+    function autoClickLoop() {
+      if (autoClickers > 0) {
+        points += autoClickers;
+        updatePoints();
+      }
+      setTimeout(autoClickLoop, 1000);
+    }
+
+    function setupReferralLink() {
+      const refLink = `${window.location.origin + window.location.pathname}?startparam=${userId}`;
+      refInput.value = refLink;
+    }
+
+    updatePoints();
+    setupReferralLink();
+    autoClickLoop();
+
+    Telegram.WebApp.ready();
+    Telegram.WebApp.expand();
+  </script>
+</body>
+</html>
